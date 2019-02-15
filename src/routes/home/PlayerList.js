@@ -4,10 +4,10 @@ class PlayerList extends Component {
   state = {
     numberOfPlayers: null,
     playerDetails: false,
-    player_1: ' ',
-    player_2: ' ',
-    player_3: ' ',
-    player_4: ' ',
+    player_1: '',
+    player_2: '',
+    player_3: '',
+    player_4: '',
     start: false,
   }
 
@@ -49,9 +49,11 @@ class PlayerList extends Component {
 
     if (count) alert("Enter all player's name")
     else {
+      let { numberOfPlayers, player_1, player_2, player_3, player_4 } = this.state
       this.setState({
         start: true,
       })
+      this.props.setPlayerDetails(numberOfPlayers, player_1, player_2, player_3, player_4)
       this.props.history.push('/play')
     }
   }
