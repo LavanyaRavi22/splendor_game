@@ -27,30 +27,90 @@ class CoinSection extends Component {
       total: this.props.coins.yellow,
       selected: 0,
     },
+    currentPlayer: this.props.currentPlayer,
   }
 
   componentDidMount() {
-    console.log(this.state)
+    //console.log(this.state)
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentPlayer !== state.currentPlayer) {
+      return {
+        red: {
+          total: props.coins.red,
+          selected: 0,
+        },
+        green: {
+          total: props.coins.green,
+          selected: 0,
+        },
+        white: {
+          total: props.coins.white,
+          selected: 0,
+        },
+        blue: {
+          total: props.coins.blue,
+          selected: 0,
+        },
+        brown: {
+          total: props.coins.brown,
+          selected: 0,
+        },
+        yellow: {
+          total: props.coins.yellow,
+          selected: 0,
+        },
+        currentPlayer: props.currentPlayer,
+      }
+    } else return null
   }
 
   selectCoin = selectedCoin => {
-    let numberOfCoin = this.state[selectedCoin]
-    console.log(numberOfCoin)
-    if (numberOfCoin.total > 0) {
-      this.setState({
-        [selectedCoin]: {
-          total: numberOfCoin.total - 1,
-          selected: numberOfCoin.selected + 1,
-        },
-      })
+    let totalSelected = 0
+    let doubleCoin
+
+    console.log(selectedCoin)
+
+    for (var key in this.state) {
+      if (key !== 'currentPlayer') {
+        console.log(this.state[key].selected)
+        totalSelected += this.state[key].selected
+        // console.log(this.state[key].selected)
+        if (
+          (this.state[key].selected === 1 && selectedCoin === key) ||
+          this.state[key].selected === 2
+        )
+          doubleCoin = key
+      }
+    }
+
+    console.log(doubleCoin)
+    console.log(totalSelected)
+
+    if (doubleCoin && totalSelected > 1) {
+      alert(`You can only select 2 coins of same color or three of different colors`)
+    } else if (totalSelected < 3) {
+      let numberOfCoin = this.state[selectedCoin]
+
+      if (numberOfCoin.total > 0) {
+        this.setState({
+          [selectedCoin]: {
+            total: numberOfCoin.total - 1,
+            selected: numberOfCoin.selected + 1,
+          },
+        })
+      } else {
+        alert(`No ${selectedCoin} coins are available. Select another.`)
+      }
     } else {
-      alert(`No ${selectedCoin} coins are available. Select another.`)
+      alert(`You have selected maximum number of coins allowed.`)
     }
   }
 
   removeCoin = selectedCoin => {
     let numberOfCoin = this.state[selectedCoin]
-    console.log(numberOfCoin)
+    // console.log(numberOfCoin)
 
     this.setState({
       [selectedCoin]: {
@@ -58,6 +118,18 @@ class CoinSection extends Component {
         selected: numberOfCoin.selected - 1,
       },
     })
+  }
+
+  getCoins = () => {
+    let purchasedCoins = {
+      red: this.state.red.selected,
+      green: this.state.green.selected,
+      white: this.state.white.selected,
+      blue: this.state.blue.selected,
+      brown: this.state.brown.selected,
+    }
+
+    this.props.getCoins(purchasedCoins)
   }
 
   render() {
@@ -125,6 +197,7 @@ class CoinSection extends Component {
             </Coin>
           )}
         </AllCoin>
+        <button onClick={this.getCoins}>Get them!</button>
       </div>
     )
   }
