@@ -28,6 +28,7 @@ class CoinSection extends Component {
       selected: 0,
     },
     currentPlayer: this.props.currentPlayer,
+    turnDone: this.props.turnDone,
   }
 
   componentDidMount() {
@@ -35,7 +36,7 @@ class CoinSection extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.currentPlayer !== state.currentPlayer) {
+    if (props.currentPlayer !== state.currentPlayer || props.turnDone) {
       return {
         red: {
           total: props.coins.red,
@@ -62,6 +63,7 @@ class CoinSection extends Component {
           selected: 0,
         },
         currentPlayer: props.currentPlayer,
+        turnDone: props.turnDone,
       }
     } else return null
   }
@@ -73,7 +75,7 @@ class CoinSection extends Component {
     console.log(selectedCoin)
 
     for (var key in this.state) {
-      if (key !== 'currentPlayer') {
+      if (key !== 'currentPlayer' && key !== 'turnDone') {
         console.log(this.state[key].selected)
         totalSelected += this.state[key].selected
         // console.log(this.state[key].selected)
@@ -120,7 +122,7 @@ class CoinSection extends Component {
     })
   }
 
-  getCoins = () => {
+  getCoins = async () => {
     let purchasedCoins = {
       red: this.state.red.selected,
       green: this.state.green.selected,
@@ -129,12 +131,13 @@ class CoinSection extends Component {
       brown: this.state.brown.selected,
     }
 
-    this.props.getCoins(purchasedCoins)
+    await this.props.getCoins(purchasedCoins)
+    this.props.nextTurn()
   }
 
   render() {
     let { red, green, white, blue, brown, yellow } = this.state
-
+    console.log(this.state)
     return (
       <div>
         <AllCoin>

@@ -27,29 +27,48 @@ class CardSection extends Component {
     tierOne: this.props.tierOneCards,
   }
 
+  componentDidMount() {
+    //this.props.nextTurn()
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentPlayer !== state.currentPlayer || props.turnDone) {
+      return {
+        tierOne: props.tierOneCards,
+      }
+    } else {
+      return null
+    }
+  }
+
   render() {
     console.log(this.state.tierOne)
     return (
       <div>
         <Tier>
           {this.state.tierOne &&
-            this.state.tierOne.map(card => {
+            this.state.tierOne.map((card, index) => {
               let coin = []
               for (var key in card.cost) {
                 coin.push(<Coin style={{ backgroundColor: key }}>{card.cost[key]}</Coin>)
               }
-
-              console.log(coin)
-              console.log(card.cost)
-              return (
-                <Card>
-                  <p>{card.value}</p>
-                  {coin.map(c => {
-                    return c
-                  })}
-                  <button onClick={() => this.props.getCard(card)}>Buy</button>
-                </Card>
-              )
+              if (card.value || card.value === 0)
+                return (
+                  <Card>
+                    <p>{card.value}</p>
+                    {coin.map(c => {
+                      return c
+                    })}
+                    <button
+                      onClick={async () => {
+                        await this.props.getCard(card, index)
+                        this.props.nextTurn()
+                      }}>
+                      Buy
+                    </button>
+                  </Card>
+                )
+              else return <Card />
             })}
         </Tier>
       </div>
