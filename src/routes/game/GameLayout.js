@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import CoinSection from './CoinSection'
 import PlayerSection from './PlayerSection'
 import CardSection from './CardSection'
+import NobleSection from './NobleSection'
 import tierOneCards from '../../cards/TierOne'
 import tierTwoCards from '../../cards/TierTwo'
 import tierThreeCards from '../../cards/TierThree'
+import nobles from '../../cards/Nobles'
 
 function shuffle(cards) {
   let shuffledCards = rearrange(cards, [])
@@ -43,6 +45,7 @@ class GameLayout extends Component {
       },
       cards: [],
       reservedCards: [],
+      nobleCards: [],
       points: 0,
     },
     player_2: {
@@ -63,6 +66,7 @@ class GameLayout extends Component {
       },
       cards: [],
       reservedCards: [],
+      nobleCards: [],
       points: 0,
     },
     player_3: {
@@ -83,6 +87,7 @@ class GameLayout extends Component {
       },
       cards: [],
       reservedCards: [],
+      nobleCards: [],
       points: 0,
     },
     player_4: {
@@ -103,6 +108,7 @@ class GameLayout extends Component {
       },
       cards: [],
       reservedCards: [],
+      nobleCards: [],
       points: 0,
     },
     currentPlayer: 'player_1',
@@ -120,6 +126,7 @@ class GameLayout extends Component {
     remainingTierTwoCards: [],
     tierThreeCards: [],
     remainingTierThreeCards: [],
+    nobles: [],
     cardSet: false,
     turnDone: false,
   }
@@ -129,6 +136,7 @@ class GameLayout extends Component {
     let tierOne = shuffle(tierOneCards)
     let tierTwo = shuffle(tierTwoCards)
     let tierThree = shuffle(tierThreeCards)
+    let nobleCards = shuffle(nobles)
     this.setState(
       {
         tierOneCards: tierOne.splice(0, 4),
@@ -137,19 +145,12 @@ class GameLayout extends Component {
         remainingTierTwoCards: tierTwo,
         tierThreeCards: tierThree.splice(0, 4),
         remainingTierThreeCards: tierThree,
+        nobles: nobleCards.splice(0, 5),
         cardSet: true,
       },
       () => console.log(this.state),
     )
-    // console.log(tierOne)
   }
-
-  // addMoreCoins = (player, newCoins) => {
-  //   const updatePlayer = Object.assign({}, this.state)
-
-  //   // console.log(updatePlayer['player_' + player].coins)
-  //   // console.log(newCoins)
-  // }
 
   getCard = async (card, index, tier) => {
     let currentPlayer = this.state.currentPlayer
@@ -224,11 +225,16 @@ class GameLayout extends Component {
           remainingTierTwoCards: remainingTierTwoCards,
           tierThreeCards: tierThree,
           remainingTierThreeCards: remainingTierThreeCards,
-          turnDone: true,
-          currentPlayer: 'player_' + String(nextPlayer),
+          // turnDone: true,
+          // currentPlayer: 'player_' + String(nextPlayer),
         },
         () => {
           console.log(this.state)
+          this.checkNobleCard()
+          this.setState({
+            turnDone: true,
+            currentPlayer: 'player_' + String(nextPlayer),
+          })
         },
       )
     }
@@ -281,12 +287,42 @@ class GameLayout extends Component {
   }
 
   nextTurn = () => {
-    this.setState(
-      {
-        turnDone: false,
-      },
-      () => console.log(this.state),
-    )
+    this.setState({
+      turnDone: false,
+    })
+  }
+
+  checkNobleCard = () => {
+    let nobles = Object.assign([], this.state.nobles)
+    //let currentPlayer = Object.assign({}, this.state.currentPlayer)
+    let player = Object.assign({}, this.state[this.state.currentPlayer])
+
+    nobles.map(async (nobleCard, index) => {
+      let totalCount = 0
+      let countMatched = 0
+
+      let cardRequired = nobleCard.cards
+      for (var key in cardRequired) {
+        totalCount++
+        if (player.cardCoins[key] >= nobleCard.cards[key]) countMatched++
+      }
+
+      console.log(totalCount === countMatched)
+
+      if (totalCount === countMatched) {
+        player.nobleCards.push(nobleCard)
+        nobles.splice(1, index)
+      }
+
+      console.log(nobles)
+
+      await this.setState({
+        [this.state.currentPlayer]: player,
+        nobles: nobles,
+      })
+    })
+
+    console.log(this.state)
   }
 
   render() {
@@ -304,15 +340,18 @@ class GameLayout extends Component {
             nextTurn={this.nextTurn}
           />
           {this.state.cardSet && (
-            <CardSection
-              tierOneCards={this.state.tierOneCards}
-              tierTwoCards={this.state.tierTwoCards}
-              tierThreeCards={this.state.tierThreeCards}
-              getCard={this.getCard}
-              currentPlayer={this.state.currentPlayer}
-              turnDone={this.state.turnDone}
-              nextTurn={this.nextTurn}
-            />
+            <React.Fragment>
+              <CardSection
+                tierOneCards={this.state.tierOneCards}
+                tierTwoCards={this.state.tierTwoCards}
+                tierThreeCards={this.state.tierThreeCards}
+                getCard={this.getCard}
+                currentPlayer={this.state.currentPlayer}
+                turnDone={this.state.turnDone}
+                nextTurn={this.nextTurn}
+              />
+              <NobleSection nobles={this.state.nobles} />
+            </React.Fragment>
           )}
         </div>
         <PlayerSection player={player} />
