@@ -139,7 +139,7 @@ class CoinSection extends Component {
     let { red, green, white, blue, brown, yellow } = this.state
     console.log(this.state)
     return (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '20%' }}>
         <AllCoin>
           <Coin style={{ backgroundColor: 'red' }} onClick={() => this.selectCoin('red')}>
             {red.total}

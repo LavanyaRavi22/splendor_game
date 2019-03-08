@@ -3,6 +3,8 @@ import CoinSection from './CoinSection'
 import PlayerSection from './PlayerSection'
 import CardSection from './CardSection'
 import tierOneCards from '../../cards/TierOne'
+import tierTwoCards from '../../cards/TierTwo'
+import tierThreeCards from '../../cards/TierThree'
 
 function shuffle(cards) {
   let shuffledCards = rearrange(cards, [])
@@ -32,6 +34,13 @@ class GameLayout extends Component {
         white: 0,
         brown: 0,
       },
+      cardCoins: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        white: 0,
+        brown: 0,
+      },
       cards: [],
       reservedCards: [],
       points: 0,
@@ -39,6 +48,13 @@ class GameLayout extends Component {
     player_2: {
       name: this.props.player_2,
       coins: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        white: 0,
+        brown: 0,
+      },
+      cardCoins: {
         red: 0,
         green: 0,
         blue: 0,
@@ -58,6 +74,13 @@ class GameLayout extends Component {
         white: 0,
         brown: 0,
       },
+      cardCoins: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        white: 0,
+        brown: 0,
+      },
       cards: [],
       reservedCards: [],
       points: 0,
@@ -65,6 +88,13 @@ class GameLayout extends Component {
     player_4: {
       name: this.props.player_4,
       coins: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        white: 0,
+        brown: 0,
+      },
+      cardCoins: {
         red: 0,
         green: 0,
         blue: 0,
@@ -86,6 +116,10 @@ class GameLayout extends Component {
     },
     tierOneCards: [],
     remainingTierOneCards: [],
+    tierTwoCards: [],
+    remainingTierTwoCards: [],
+    tierThreeCards: [],
+    remainingTierThreeCards: [],
     cardSet: false,
     turnDone: false,
   }
@@ -93,10 +127,16 @@ class GameLayout extends Component {
   componentDidMount() {
     console.log(tierOneCards)
     let tierOne = shuffle(tierOneCards)
+    let tierTwo = shuffle(tierTwoCards)
+    let tierThree = shuffle(tierThreeCards)
     this.setState(
       {
         tierOneCards: tierOne.splice(0, 4),
         remainingTierOneCards: tierOne,
+        tierTwoCards: tierTwo.splice(0, 4),
+        remainingTierTwoCards: tierTwo,
+        tierThreeCards: tierThree.splice(0, 4),
+        remainingTierThreeCards: tierThree,
         cardSet: true,
       },
       () => console.log(this.state),
@@ -111,27 +151,40 @@ class GameLayout extends Component {
   //   // console.log(newCoins)
   // }
 
-  getCard = async (card, index) => {
+  getCard = async (card, index, tier) => {
     let currentPlayer = this.state.currentPlayer
     let player = Object.assign({}, this.state[this.state.currentPlayer])
     let buyCard = true
     let playerCoin = Object.assign({}, this.state[this.state.currentPlayer].coins)
+    let playerCardCoin = Object.assign({}, this.state[this.state.currentPlayer].cardCoins)
     let playerCard = this.state[this.state.currentPlayer].cards
     let tierOne = Object.assign([], this.state.tierOneCards)
     let remainingTierOneCards = Object.assign([], this.state.remainingTierOneCards)
+    let tierTwo = Object.assign([], this.state.tierTwoCards)
+    let remainingTierTwoCards = Object.assign([], this.state.remainingTierTwoCards)
+    let tierThree = Object.assign([], this.state.tierThreeCards)
+    let remainingTierThreeCards = Object.assign([], this.state.remainingTierThreeCards)
     let totalCoins = Object.assign({}, this.state.totalCoins)
 
     for (let key in card.cost) {
-      if (card.cost[key] > player.coins[key]) buyCard = false
+      if (card.cost[key] > player.coins[key] + player.cardCoins[key]) buyCard = false
     }
 
     if (buyCard) {
       for (let key in card.cost) {
-        playerCoin[key] -= card.cost[key]
-        totalCoins[key] += card.cost[key]
+        if (playerCardCoin[key]) {
+          if (playerCardCoin[key] >= card.cost[key]) continue
+          else {
+            playerCoin[key] = playerCoin[key] - (card.cost[key] - playerCardCoin[key])
+            totalCoins[key] = totalCoins[key] + (card.cost[key] - playerCardCoin[key])
+          }
+        } else {
+          playerCoin[key] -= card.cost[key]
+          totalCoins[key] += card.cost[key]
+        }
       }
 
-      playerCoin[card.color] += 1
+      playerCardCoin[card.color] += 1
 
       if (card.value) player.points += card.value
 
@@ -141,29 +194,36 @@ class GameLayout extends Component {
 
       if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
 
-      console.log(index)
-      console.log(tierOne)
-
-      if (remainingTierOneCards.length > 0) tierOne.splice(index, 1, remainingTierOneCards.shift())
-      else tierOne.splice(index, 1, {})
-      // console.log(tierOne)
-      // console.log(remainingTierOneCards)
-
-      //tierOne.push(remainingTierOneCards.shift())
-
-      console.log(tierOne)
-      console.log(remainingTierOneCards)
+      if (tier === 1) {
+        if (remainingTierOneCards.length > 0)
+          tierOne.splice(index, 1, remainingTierOneCards.shift())
+        else tierOne.splice(index, 1, {})
+      } else if (tier === 2) {
+        if (remainingTierTwoCards.length > 0)
+          tierTwo.splice(index, 1, remainingTierTwoCards.shift())
+        else tierTwo.splice(index, 1, {})
+      } else if (tier === 3) {
+        if (remainingTierThreeCards.length > 0)
+          tierThree.splice(index, 1, remainingTierThreeCards.shift())
+        else tierThree.splice(index, 1, {})
+        console.log(tierThree)
+      }
 
       await this.setState(
         {
           [this.state.currentPlayer]: {
             ...player,
             coins: playerCoin,
+            cardCoins: playerCardCoin,
             cards: [...playerCard, card],
           },
           totalCoins: totalCoins,
           tierOneCards: tierOne,
           remainingTierOneCards: remainingTierOneCards,
+          tierTwoCards: tierTwo,
+          remainingTierTwoCards: remainingTierTwoCards,
+          tierThreeCards: tierThree,
+          remainingTierThreeCards: remainingTierThreeCards,
           turnDone: true,
           currentPlayer: 'player_' + String(nextPlayer),
         },
@@ -235,22 +295,26 @@ class GameLayout extends Component {
     return (
       <div>
         <h3>Splendor</h3>
-        <CoinSection
-          coins={this.state.totalCoins}
-          getCoins={this.getCoins}
-          currentPlayer={this.state.currentPlayer}
-          turnDone={this.state.turnDone}
-          nextTurn={this.nextTurn}
-        />
-        {this.state.cardSet && (
-          <CardSection
-            tierOneCards={this.state.tierOneCards}
-            getCard={this.getCard}
+        <div style={{ display: 'flex' }}>
+          <CoinSection
+            coins={this.state.totalCoins}
+            getCoins={this.getCoins}
             currentPlayer={this.state.currentPlayer}
             turnDone={this.state.turnDone}
             nextTurn={this.nextTurn}
           />
-        )}
+          {this.state.cardSet && (
+            <CardSection
+              tierOneCards={this.state.tierOneCards}
+              tierTwoCards={this.state.tierTwoCards}
+              tierThreeCards={this.state.tierThreeCards}
+              getCard={this.getCard}
+              currentPlayer={this.state.currentPlayer}
+              turnDone={this.state.turnDone}
+              nextTurn={this.nextTurn}
+            />
+          )}
+        </div>
         <PlayerSection player={player} />
       </div>
     )
