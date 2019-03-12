@@ -4,7 +4,7 @@ import { createBrowserHistory } from 'history'
 import Home from './home/Home'
 import GameLayout from './game/GameLayout'
 
-const history = createBrowserHistory({})
+const history = createBrowserHistory()
 
 class Routes extends Component {
   state = {
@@ -15,38 +15,21 @@ class Routes extends Component {
     player_4: ' ',
   }
 
-  setPlayerDetails = (numberOfPlayers, player_1, player_2, player_3, player_4) => {
-    console.log('setPlayerDetails')
-    this.setState({
-      numberOfPlayers,
-      player_1,
-      player_2,
-      player_3,
-      player_4,
-    })
-  }
-
   render() {
-    let { numberOfPlayers, player_1, player_2, player_3, player_4 } = this.state
-
     return (
       <Router history={history}>
         <RouteSwitch>
-          <Route
-            exact
-            path="/"
-            render={props => <Home {...props} setPlayerDetails={this.setPlayerDetails} />}
-          />
+          <Route exact path="/" render={props => <Home {...props} />} />
           <Route
             path="/play"
             render={props => (
               <GameLayout
                 routeProps={props}
-                numberOfPlayers={Number(numberOfPlayers)}
-                player_1={player_1}
-                player_2={player_2}
-                player_3={player_3}
-                player_4={player_4}
+                numberOfPlayers={Number(props.location.state.numberOfPlayers)}
+                player_1={props.location.state.player_1}
+                player_2={props.location.state.player_2}
+                player_3={props.location.state.player_3}
+                player_4={props.location.state.player_4}
               />
             )}
           />

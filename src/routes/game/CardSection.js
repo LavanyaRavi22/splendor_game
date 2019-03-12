@@ -60,7 +60,6 @@ class CardSection extends Component {
   }
 
   render() {
-    console.log(this.state.tierOne)
     return (
       <div style={{ width: '80%' }}>
         <Tier>

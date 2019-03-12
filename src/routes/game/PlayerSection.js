@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 class PlayerSection extends Component {
   render() {
-    console.log(this.props.player)
     let player = this.props.player
     return (
       <div>

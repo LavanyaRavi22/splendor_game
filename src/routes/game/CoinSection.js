@@ -31,10 +31,6 @@ class CoinSection extends Component {
     turnDone: this.props.turnDone,
   }
 
-  componentDidMount() {
-    //console.log(this.state)
-  }
-
   static getDerivedStateFromProps(props, state) {
     if (props.currentPlayer !== state.currentPlayer || props.turnDone) {
       return {
@@ -72,13 +68,9 @@ class CoinSection extends Component {
     let totalSelected = 0
     let doubleCoin
 
-    console.log(selectedCoin)
-
     for (var key in this.state) {
       if (key !== 'currentPlayer' && key !== 'turnDone') {
-        console.log(this.state[key].selected)
         totalSelected += this.state[key].selected
-        // console.log(this.state[key].selected)
         if (
           (this.state[key].selected === 1 && selectedCoin === key) ||
           this.state[key].selected === 2
@@ -86,9 +78,6 @@ class CoinSection extends Component {
           doubleCoin = key
       }
     }
-
-    console.log(doubleCoin)
-    console.log(totalSelected)
 
     if (doubleCoin && totalSelected > 1) {
       alert(`You can only select 2 coins of same color or three of different colors`)
@@ -112,7 +101,6 @@ class CoinSection extends Component {
 
   removeCoin = selectedCoin => {
     let numberOfCoin = this.state[selectedCoin]
-    // console.log(numberOfCoin)
 
     this.setState({
       [selectedCoin]: {
@@ -137,7 +125,7 @@ class CoinSection extends Component {
 
   render() {
     let { red, green, white, blue, brown, yellow } = this.state
-    console.log(this.state)
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', width: '20%' }}>
         <AllCoin>

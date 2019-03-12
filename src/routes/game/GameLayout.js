@@ -11,8 +11,6 @@ import nobles from '../../cards/Nobles'
 function shuffle(cards) {
   let shuffledCards = rearrange(cards, [])
 
-  console.log(shuffledCards)
-
   return shuffledCards
 }
 
@@ -132,36 +130,34 @@ class GameLayout extends Component {
   }
 
   componentDidMount() {
+    console.log(tierOneCards)
     let tierOne = shuffle(tierOneCards)
     let tierTwo = shuffle(tierTwoCards)
     let tierThree = shuffle(tierThreeCards)
     let nobleCards = shuffle(nobles)
     let totalCoins = Object.assign({}, this.state.totalCoins)
-    console.log(this.props.numberOfPlayers)
-    console.log(typeof this.props.numberOfPlayers)
+
     if (this.props.numberOfPlayers === 2) {
-      console.log('in here')
       for (let key in totalCoins) totalCoins[key] = 4
     } else if (this.props.numberOfPlayers === 3) {
       for (let key in totalCoins) totalCoins[key] = 5
     }
 
-    console.log(totalCoins)
+    this.setState({
+      tierOneCards: tierOne.splice(0, 4),
+      remainingTierOneCards: tierOne,
+      tierTwoCards: tierTwo.splice(0, 4),
+      remainingTierTwoCards: tierTwo,
+      tierThreeCards: tierThree.splice(0, 4),
+      remainingTierThreeCards: tierThree,
+      nobles: nobleCards.splice(0, 5),
+      totalCoins: totalCoins,
+      cardSet: true,
+    })
+  }
 
-    this.setState(
-      {
-        tierOneCards: tierOne.splice(0, 4),
-        remainingTierOneCards: tierOne,
-        tierTwoCards: tierTwo.splice(0, 4),
-        remainingTierTwoCards: tierTwo,
-        tierThreeCards: tierThree.splice(0, 4),
-        remainingTierThreeCards: tierThree,
-        nobles: nobleCards.splice(0, 5),
-        totalCoins: totalCoins,
-        cardSet: true,
-      },
-      () => console.log(this.state),
-    )
+  componentWillUnmount() {
+    // alert('Are you sure?')
   }
 
   getCard = async (card, index, tier) => {
@@ -219,7 +215,6 @@ class GameLayout extends Component {
         if (remainingTierThreeCards.length > 0)
           tierThree.splice(index, 1, remainingTierThreeCards.shift())
         else tierThree.splice(index, 1, {})
-        console.log(tierThree)
       }
 
       await this.setState(
@@ -237,11 +232,8 @@ class GameLayout extends Component {
           remainingTierTwoCards: remainingTierTwoCards,
           tierThreeCards: tierThree,
           remainingTierThreeCards: remainingTierThreeCards,
-          // turnDone: true,
-          // currentPlayer: 'player_' + String(nextPlayer),
         },
         () => {
-          console.log(this.state)
           this.checkNobleCard()
           this.checkPoints()
           this.setState({
@@ -305,7 +297,6 @@ class GameLayout extends Component {
           totalCoins: totalCoins,
         },
         () => {
-          console.log(this.state)
           this.checkNobleCard()
           this.checkPoints()
           this.setState({
@@ -362,7 +353,6 @@ class GameLayout extends Component {
         remainingTierThreeCards: remainingTierThreeCards,
       },
       () => {
-        console.log(this.state)
         this.setState({
           turnDone: true,
           currentPlayer: 'player_' + String(nextPlayer),
@@ -396,19 +386,16 @@ class GameLayout extends Component {
 
     if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
 
-    await this.setState(
-      {
-        currentPlayer: 'player_' + String(nextPlayer),
-        [currentPlayer]: {
-          ...currentPlayerDetails,
-          coins: {
-            ...currentPlayerCoins,
-          },
+    await this.setState({
+      currentPlayer: 'player_' + String(nextPlayer),
+      [currentPlayer]: {
+        ...currentPlayerDetails,
+        coins: {
+          ...currentPlayerCoins,
         },
-        turnDone: true,
       },
-      () => console.log(this.state),
-    )
+      turnDone: true,
+    })
   }
 
   nextTurn = () => {
@@ -432,23 +419,17 @@ class GameLayout extends Component {
         if (player.cardCoins[key] >= nobleCard.cards[key]) countMatched++
       }
 
-      console.log(totalCount === countMatched)
-
       if (totalCount === countMatched) {
         player.nobleCards.push(nobleCard)
         if (nobleCard.value) player.points += nobleCard.value
         nobles.splice(1, index)
       }
 
-      console.log(nobles)
-
       await this.setState({
         [this.state.currentPlayer]: player,
         nobles: nobles,
       })
     })
-
-    console.log(this.state)
   }
 
   checkPoints = () => {
@@ -462,7 +443,7 @@ class GameLayout extends Component {
 
   render() {
     let player = this.state[this.state.currentPlayer]
-    console.log(this.state)
+
     return (
       <div>
         <h3>Splendor</h3>

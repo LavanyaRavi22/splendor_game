@@ -20,10 +20,9 @@ class PlayerList extends Component {
   getNumberOfPlayers = e => {
     if (e.target.value > 4 || e.target.value <= 1) {
       alert('Minimum players: 2, Maximum players: 4')
-      this.setState({ numberOfPlayers: 0 }, () => console.log('In here'))
+      this.setState({ numberOfPlayers: 0 })
     } else
       this.setState({ numberOfPlayers: e.target.value }, () => {
-        //console.log(this.state.numberOfPlayers);
         this.getPlayerDetails()
       })
   }
@@ -34,9 +33,7 @@ class PlayerList extends Component {
 
     update['player_' + player] = e.target.value
 
-    this.setState(update, () => {
-      //console.log(this.state)
-    })
+    this.setState(update)
   }
 
   startGame = e => {
@@ -53,8 +50,11 @@ class PlayerList extends Component {
       this.setState({
         start: true,
       })
-      this.props.setPlayerDetails(numberOfPlayers, player_1, player_2, player_3, player_4)
-      this.props.history.push('/play')
+      // this.props.setPlayerDetails(numberOfPlayers, player_1, player_2, player_3, player_4)
+      this.props.history.push({
+        pathname: '/play',
+        state: { numberOfPlayers, player_1, player_2, player_3, player_4 },
+      })
     }
   }
 

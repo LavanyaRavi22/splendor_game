@@ -9,7 +9,7 @@ class Home extends Component {
           <p>Splendor</p>
           <p>With Superheroes</p>
         </div>
-        <PlayerList {...this.props} setPlayerDetails={this.props.setPlayerDetails} />
+        <PlayerList {...this.props} />
       </div>
     )
   }
