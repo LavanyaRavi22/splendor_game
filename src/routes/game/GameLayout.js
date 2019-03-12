@@ -113,12 +113,12 @@ class GameLayout extends Component {
     },
     currentPlayer: 'player_1',
     totalCoins: {
-      red: 5,
-      green: 5,
-      blue: 5,
-      white: 5,
-      brown: 5,
-      yellow: 5,
+      red: 7,
+      green: 7,
+      blue: 7,
+      white: 7,
+      brown: 7,
+      yellow: 7,
     },
     tierOneCards: [],
     remainingTierOneCards: [],
@@ -132,11 +132,22 @@ class GameLayout extends Component {
   }
 
   componentDidMount() {
-    console.log(tierOneCards)
     let tierOne = shuffle(tierOneCards)
     let tierTwo = shuffle(tierTwoCards)
     let tierThree = shuffle(tierThreeCards)
     let nobleCards = shuffle(nobles)
+    let totalCoins = Object.assign({}, this.state.totalCoins)
+    console.log(this.props.numberOfPlayers)
+    console.log(typeof this.props.numberOfPlayers)
+    if (this.props.numberOfPlayers === 2) {
+      console.log('in here')
+      for (let key in totalCoins) totalCoins[key] = 4
+    } else if (this.props.numberOfPlayers === 3) {
+      for (let key in totalCoins) totalCoins[key] = 5
+    }
+
+    console.log(totalCoins)
+
     this.setState(
       {
         tierOneCards: tierOne.splice(0, 4),
@@ -146,6 +157,7 @@ class GameLayout extends Component {
         tierThreeCards: tierThree.splice(0, 4),
         remainingTierThreeCards: tierThree,
         nobles: nobleCards.splice(0, 5),
+        totalCoins: totalCoins,
         cardSet: true,
       },
       () => console.log(this.state),
@@ -231,6 +243,7 @@ class GameLayout extends Component {
         () => {
           console.log(this.state)
           this.checkNobleCard()
+          this.checkPoints()
           this.setState({
             turnDone: true,
             currentPlayer: 'player_' + String(nextPlayer),
@@ -240,10 +253,9 @@ class GameLayout extends Component {
     }
   }
 
-  addReservedCard = (player, card) => {
-    //const updatePlayer = Object.assign({}, this.state)
-    // console.log(updatePlayer['player_' + player].reservedCards)
-    // console.log(card)
+  reserveCard = (card, index, tier) => {
+    console.log('Reserving..')
+    console.log(card)
   }
 
   getCoins = async purchasedCoins => {
@@ -311,6 +323,7 @@ class GameLayout extends Component {
 
       if (totalCount === countMatched) {
         player.nobleCards.push(nobleCard)
+        if (nobleCard.value) player.points += nobleCard.value
         nobles.splice(1, index)
       }
 
@@ -325,6 +338,15 @@ class GameLayout extends Component {
     console.log(this.state)
   }
 
+  checkPoints = () => {
+    let player = Object.assign({}, this.state[this.state.currentPlayer])
+
+    if (player.points >= 15) {
+      alert(`${player.name} won!`)
+      this.props.routeProps.history.push('/')
+    }
+  }
+
   render() {
     let player = this.state[this.state.currentPlayer]
     console.log(this.state)
@@ -332,15 +354,16 @@ class GameLayout extends Component {
       <div>
         <h3>Splendor</h3>
         <div style={{ display: 'flex' }}>
-          <CoinSection
-            coins={this.state.totalCoins}
-            getCoins={this.getCoins}
-            currentPlayer={this.state.currentPlayer}
-            turnDone={this.state.turnDone}
-            nextTurn={this.nextTurn}
-          />
           {this.state.cardSet && (
             <React.Fragment>
+              <CoinSection
+                coins={this.state.totalCoins}
+                getCoins={this.getCoins}
+                currentPlayer={this.state.currentPlayer}
+                turnDone={this.state.turnDone}
+                nextTurn={this.nextTurn}
+              />
+
               <CardSection
                 tierOneCards={this.state.tierOneCards}
                 tierTwoCards={this.state.tierTwoCards}
@@ -349,6 +372,7 @@ class GameLayout extends Component {
                 currentPlayer={this.state.currentPlayer}
                 turnDone={this.state.turnDone}
                 nextTurn={this.nextTurn}
+                reserveCard={this.reserveCard}
               />
               <NobleSection nobles={this.state.nobles} />
             </React.Fragment>

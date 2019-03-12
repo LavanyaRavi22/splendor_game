@@ -18,8 +18,8 @@ class PlayerList extends Component {
   }
 
   getNumberOfPlayers = e => {
-    if (e.target.value > 4 && e.target.value < 0) {
-      alert('Maximum players: 4')
+    if (e.target.value > 4 || e.target.value <= 1) {
+      alert('Minimum players: 2, Maximum players: 4')
       this.setState({ numberOfPlayers: 0 }, () => console.log('In here'))
     } else
       this.setState({ numberOfPlayers: e.target.value }, () => {

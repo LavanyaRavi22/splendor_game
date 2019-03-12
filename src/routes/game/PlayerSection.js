@@ -9,6 +9,7 @@ class PlayerSection extends Component {
       <div>
         <p>Player Details</p>
         <p>{player.name}</p>
+        <p>{player.points}</p>
         <div style={{ display: 'flex' }}>
           <Coin style={{ backgroundColor: 'red' }}>{player.coins.red}</Coin>
           <Coin style={{ backgroundColor: 'green' }}>{player.coins.green}</Coin>

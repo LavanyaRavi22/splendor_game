@@ -39,9 +39,10 @@ class Routes extends Component {
           />
           <Route
             path="/play"
-            render={() => (
+            render={props => (
               <GameLayout
-                numberOfPlayers={numberOfPlayers}
+                routeProps={props}
+                numberOfPlayers={Number(numberOfPlayers)}
                 player_1={player_1}
                 player_2={player_2}
                 player_3={player_3}
