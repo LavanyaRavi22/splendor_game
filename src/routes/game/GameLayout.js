@@ -253,9 +253,122 @@ class GameLayout extends Component {
     }
   }
 
-  reserveCard = (card, index, tier) => {
-    console.log('Reserving..')
-    console.log(card)
+  getReservedCard = async (card, index) => {
+    let currentPlayer = this.state.currentPlayer
+    let player = Object.assign({}, this.state[this.state.currentPlayer])
+    let reservedCards = this.state[this.state.currentPlayer].reservedCards
+    let playerCoin = Object.assign({}, this.state[this.state.currentPlayer].coins)
+    let playerCardCoin = Object.assign({}, this.state[this.state.currentPlayer].cardCoins)
+    let playerCard = this.state[this.state.currentPlayer].cards
+    let totalCoins = Object.assign({}, this.state.totalCoins)
+    let buyCard = true
+
+    for (let key in card.cost) {
+      if (card.cost[key] > player.coins[key] + player.cardCoins[key]) buyCard = false
+    }
+
+    if (buyCard) {
+      for (let key in card.cost) {
+        if (playerCardCoin[key]) {
+          if (playerCardCoin[key] >= card.cost[key]) continue
+          else {
+            playerCoin[key] = playerCoin[key] - (card.cost[key] - playerCardCoin[key])
+            totalCoins[key] = totalCoins[key] + (card.cost[key] - playerCardCoin[key])
+          }
+        } else {
+          playerCoin[key] -= card.cost[key]
+          totalCoins[key] += card.cost[key]
+        }
+      }
+
+      playerCardCoin[card.color] += 1
+
+      if (card.value) player.points += card.value
+
+      let nextPlayer =
+        (Number(currentPlayer.slice(currentPlayer.length - 1, currentPlayer.length)) + 1) %
+        this.props.numberOfPlayers
+
+      if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
+
+      reservedCards.splice(index, 1)
+
+      await this.setState(
+        {
+          [this.state.currentPlayer]: {
+            ...player,
+            coins: playerCoin,
+            cardCoins: playerCardCoin,
+            cards: [...playerCard, card],
+            reservedCards: reservedCards,
+          },
+          totalCoins: totalCoins,
+        },
+        () => {
+          console.log(this.state)
+          this.checkNobleCard()
+          this.checkPoints()
+          this.setState({
+            turnDone: true,
+            currentPlayer: 'player_' + String(nextPlayer),
+          })
+        },
+      )
+    }
+  }
+
+  reserveCard = async (card, index, tier) => {
+    let currentPlayer = this.state.currentPlayer
+    let player = Object.assign({}, this.state[this.state.currentPlayer])
+    let reservedCards = this.state[this.state.currentPlayer].reservedCards
+    let tierOne = Object.assign([], this.state.tierOneCards)
+    let remainingTierOneCards = Object.assign([], this.state.remainingTierOneCards)
+    let tierTwo = Object.assign([], this.state.tierTwoCards)
+    let remainingTierTwoCards = Object.assign([], this.state.remainingTierTwoCards)
+    let tierThree = Object.assign([], this.state.tierThreeCards)
+    let remainingTierThreeCards = Object.assign([], this.state.remainingTierThreeCards)
+
+    reservedCards.push(card)
+
+    let nextPlayer =
+      (Number(currentPlayer.slice(currentPlayer.length - 1, currentPlayer.length)) + 1) %
+      this.props.numberOfPlayers
+
+    if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
+
+    if (tier === 1) {
+      if (remainingTierOneCards.length > 0) tierOne.splice(index, 1, remainingTierOneCards.shift())
+      else tierOne.splice(index, 1, {})
+    } else if (tier === 2) {
+      if (remainingTierTwoCards.length > 0) tierTwo.splice(index, 1, remainingTierTwoCards.shift())
+      else tierTwo.splice(index, 1, {})
+    } else if (tier === 3) {
+      if (remainingTierThreeCards.length > 0)
+        tierThree.splice(index, 1, remainingTierThreeCards.shift())
+      else tierThree.splice(index, 1, {})
+    }
+
+    await this.setState(
+      {
+        [this.state.currentPlayer]: {
+          ...player,
+          reservedCards: reservedCards,
+        },
+        tierOneCards: tierOne,
+        remainingTierOneCards: remainingTierOneCards,
+        tierTwoCards: tierTwo,
+        remainingTierTwoCards: remainingTierTwoCards,
+        tierThreeCards: tierThree,
+        remainingTierThreeCards: remainingTierThreeCards,
+      },
+      () => {
+        console.log(this.state)
+        this.setState({
+          turnDone: true,
+          currentPlayer: 'player_' + String(nextPlayer),
+        })
+      },
+    )
   }
 
   getCoins = async purchasedCoins => {
@@ -378,7 +491,11 @@ class GameLayout extends Component {
             </React.Fragment>
           )}
         </div>
-        <PlayerSection player={player} />
+        <PlayerSection
+          player={player}
+          getReservedCard={this.getReservedCard}
+          nextTurn={this.nextTurn}
+        />
       </div>
     )
   }

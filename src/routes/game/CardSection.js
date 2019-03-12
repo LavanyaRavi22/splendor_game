@@ -86,6 +86,13 @@ class CardSection extends Component {
                       }}>
                       Buy
                     </button>
+                    <button
+                      onClick={async () => {
+                        await this.props.reserveCard(card, index, 1)
+                        this.props.nextTurn()
+                      }}>
+                      Reserve
+                    </button>
                   </Card>
                 )
               else return <Card />
@@ -114,6 +121,13 @@ class CardSection extends Component {
                       }}>
                       Buy
                     </button>
+                    <button
+                      onClick={async () => {
+                        await this.props.reserveCard(card, index, 2)
+                        this.props.nextTurn()
+                      }}>
+                      Reserve
+                    </button>
                   </Card>
                 )
               else return <Card />
@@ -141,6 +155,13 @@ class CardSection extends Component {
                         this.props.nextTurn()
                       }}>
                       Buy
+                    </button>
+                    <button
+                      onClick={async () => {
+                        await this.props.reserveCard(card, index, 3)
+                        this.props.nextTurn()
+                      }}>
+                      Reserve
                     </button>
                   </Card>
                 )
