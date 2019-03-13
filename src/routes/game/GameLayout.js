@@ -130,34 +130,43 @@ class GameLayout extends Component {
   }
 
   componentDidMount() {
-    console.log(tierOneCards)
-    let tierOne = shuffle(tierOneCards)
-    let tierTwo = shuffle(tierTwoCards)
-    let tierThree = shuffle(tierThreeCards)
-    let nobleCards = shuffle(nobles)
-    let totalCoins = Object.assign({}, this.state.totalCoins)
+    let cachedData = JSON.parse(localStorage.getItem('data'))
+    if (cachedData) {
+      this.setState({
+        ...cachedData,
+      })
+    } else {
+      let tierOne = shuffle(tierOneCards)
+      let tierTwo = shuffle(tierTwoCards)
+      let tierThree = shuffle(tierThreeCards)
+      let nobleCards = shuffle(nobles)
+      let totalCoins = Object.assign({}, this.state.totalCoins)
 
-    if (this.props.numberOfPlayers === 2) {
-      for (let key in totalCoins) totalCoins[key] = 4
-    } else if (this.props.numberOfPlayers === 3) {
-      for (let key in totalCoins) totalCoins[key] = 5
+      if (this.props.numberOfPlayers === 2) {
+        for (let key in totalCoins) totalCoins[key] = 4
+      } else if (this.props.numberOfPlayers === 3) {
+        for (let key in totalCoins) totalCoins[key] = 5
+      }
+
+      this.setState({
+        tierOneCards: tierOne.splice(0, 4),
+        remainingTierOneCards: tierOne,
+        tierTwoCards: tierTwo.splice(0, 4),
+        remainingTierTwoCards: tierTwo,
+        tierThreeCards: tierThree.splice(0, 4),
+        remainingTierThreeCards: tierThree,
+        nobles: nobleCards.splice(0, 5),
+        totalCoins: totalCoins,
+        cardSet: true,
+      })
+
+      localStorage.setItem('data', JSON.stringify(this.state))
     }
-
-    this.setState({
-      tierOneCards: tierOne.splice(0, 4),
-      remainingTierOneCards: tierOne,
-      tierTwoCards: tierTwo.splice(0, 4),
-      remainingTierTwoCards: tierTwo,
-      tierThreeCards: tierThree.splice(0, 4),
-      remainingTierThreeCards: tierThree,
-      nobles: nobleCards.splice(0, 5),
-      totalCoins: totalCoins,
-      cardSet: true,
-    })
   }
 
   componentWillUnmount() {
-    // alert('Are you sure?')
+    alert('Are you sure?')
+    localStorage.removeItem('data')
   }
 
   getCard = async (card, index, tier) => {
@@ -236,10 +245,13 @@ class GameLayout extends Component {
         () => {
           this.checkNobleCard()
           this.checkPoints()
-          this.setState({
-            turnDone: true,
-            currentPlayer: 'player_' + String(nextPlayer),
-          })
+          this.setState(
+            {
+              turnDone: true,
+              currentPlayer: 'player_' + String(nextPlayer),
+            },
+            () => localStorage.setItem('data', JSON.stringify(this.state)),
+          )
         },
       )
     }
@@ -299,10 +311,13 @@ class GameLayout extends Component {
         () => {
           this.checkNobleCard()
           this.checkPoints()
-          this.setState({
-            turnDone: true,
-            currentPlayer: 'player_' + String(nextPlayer),
-          })
+          this.setState(
+            {
+              turnDone: true,
+              currentPlayer: 'player_' + String(nextPlayer),
+            },
+            () => localStorage.setItem('data', JSON.stringify(this.state)),
+          )
         },
       )
     }
@@ -353,10 +368,13 @@ class GameLayout extends Component {
         remainingTierThreeCards: remainingTierThreeCards,
       },
       () => {
-        this.setState({
-          turnDone: true,
-          currentPlayer: 'player_' + String(nextPlayer),
-        })
+        this.setState(
+          {
+            turnDone: true,
+            currentPlayer: 'player_' + String(nextPlayer),
+          },
+          () => localStorage.setItem('data', JSON.stringify(this.state)),
+        )
       },
     )
   }
@@ -386,22 +404,28 @@ class GameLayout extends Component {
 
     if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
 
-    await this.setState({
-      currentPlayer: 'player_' + String(nextPlayer),
-      [currentPlayer]: {
-        ...currentPlayerDetails,
-        coins: {
-          ...currentPlayerCoins,
+    await this.setState(
+      {
+        currentPlayer: 'player_' + String(nextPlayer),
+        [currentPlayer]: {
+          ...currentPlayerDetails,
+          coins: {
+            ...currentPlayerCoins,
+          },
         },
+        turnDone: true,
       },
-      turnDone: true,
-    })
+      () => localStorage.setItem('data', JSON.stringify(this.state)),
+    )
   }
 
   nextTurn = () => {
-    this.setState({
-      turnDone: false,
-    })
+    this.setState(
+      {
+        turnDone: false,
+      },
+      () => localStorage.setItem('data', JSON.stringify(this.state)),
+    )
   }
 
   checkNobleCard = () => {
@@ -430,6 +454,8 @@ class GameLayout extends Component {
         nobles: nobles,
       })
     })
+
+    localStorage.setItem('data', JSON.stringify(this.state))
   }
 
   checkPoints = () => {
