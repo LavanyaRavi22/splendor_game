@@ -3,10 +3,12 @@ import CoinSection from './CoinSection'
 import PlayerSection from './PlayerSection'
 import CardSection from './CardSection'
 import NobleSection from './NobleSection'
-import tierOneCards from '../../cards/TierOne'
-import tierTwoCards from '../../cards/TierTwo'
-import tierThreeCards from '../../cards/TierThree'
-import nobles from '../../cards/Nobles'
+// import tierOneCards from '../../cards/TierOne'
+// import tierTwoCards from '../../cards/TierTwo'
+// import tierThreeCards from '../../cards/TierThree'
+//import nobles from '../../cards/Nobles'
+import styled from 'styled-components'
+import { Prompt } from 'react-router'
 
 function shuffle(cards) {
   let shuffledCards = rearrange(cards, [])
@@ -136,6 +138,10 @@ class GameLayout extends Component {
         ...cachedData,
       })
     } else {
+      let tierOneCards = JSON.parse(localStorage.getItem('tierOne'))
+      let tierTwoCards = JSON.parse(localStorage.getItem('tierTwo'))
+      let tierThreeCards = JSON.parse(localStorage.getItem('tierThree'))
+      let nobles = JSON.parse(localStorage.getItem('nobles'))
       let tierOne = shuffle(tierOneCards)
       let tierTwo = shuffle(tierTwoCards)
       let tierThree = shuffle(tierThreeCards)
@@ -148,24 +154,24 @@ class GameLayout extends Component {
         for (let key in totalCoins) totalCoins[key] = 5
       }
 
-      this.setState({
-        tierOneCards: tierOne.splice(0, 4),
-        remainingTierOneCards: tierOne,
-        tierTwoCards: tierTwo.splice(0, 4),
-        remainingTierTwoCards: tierTwo,
-        tierThreeCards: tierThree.splice(0, 4),
-        remainingTierThreeCards: tierThree,
-        nobles: nobleCards.splice(0, 5),
-        totalCoins: totalCoins,
-        cardSet: true,
-      })
-
-      localStorage.setItem('data', JSON.stringify(this.state))
+      this.setState(
+        {
+          tierOneCards: tierOne.splice(0, 4),
+          remainingTierOneCards: tierOne,
+          tierTwoCards: tierTwo.splice(0, 4),
+          remainingTierTwoCards: tierTwo,
+          tierThreeCards: tierThree.splice(0, 4),
+          remainingTierThreeCards: tierThree,
+          nobles: nobleCards.splice(0, 5),
+          totalCoins: totalCoins,
+          cardSet: true,
+        },
+        () => localStorage.setItem('data', JSON.stringify(this.state)),
+      )
     }
   }
 
   componentWillUnmount() {
-    alert('Are you sure?')
     localStorage.removeItem('data')
   }
 
@@ -471,41 +477,50 @@ class GameLayout extends Component {
     let player = this.state[this.state.currentPlayer]
 
     return (
-      <div>
-        <h3>Splendor</h3>
-        <div style={{ display: 'flex' }}>
-          {this.state.cardSet && (
-            <React.Fragment>
-              <CoinSection
-                coins={this.state.totalCoins}
-                getCoins={this.getCoins}
-                currentPlayer={this.state.currentPlayer}
-                turnDone={this.state.turnDone}
-                nextTurn={this.nextTurn}
-              />
+      <React.Fragment>
+        <Prompt when={true} message="Are you sure you want to leave?" />
+        <div>
+          <Splendor>Splendor</Splendor>
+          <div style={{ display: 'flex' }}>
+            {this.state.cardSet && (
+              <React.Fragment>
+                <CoinSection
+                  coins={this.state.totalCoins}
+                  getCoins={this.getCoins}
+                  currentPlayer={this.state.currentPlayer}
+                  turnDone={this.state.turnDone}
+                  nextTurn={this.nextTurn}
+                />
 
-              <CardSection
-                tierOneCards={this.state.tierOneCards}
-                tierTwoCards={this.state.tierTwoCards}
-                tierThreeCards={this.state.tierThreeCards}
-                getCard={this.getCard}
-                currentPlayer={this.state.currentPlayer}
-                turnDone={this.state.turnDone}
-                nextTurn={this.nextTurn}
-                reserveCard={this.reserveCard}
-              />
-              <NobleSection nobles={this.state.nobles} />
-            </React.Fragment>
-          )}
+                <CardSection
+                  tierOneCards={this.state.tierOneCards}
+                  tierTwoCards={this.state.tierTwoCards}
+                  tierThreeCards={this.state.tierThreeCards}
+                  getCard={this.getCard}
+                  currentPlayer={this.state.currentPlayer}
+                  turnDone={this.state.turnDone}
+                  nextTurn={this.nextTurn}
+                  reserveCard={this.reserveCard}
+                />
+                <NobleSection nobles={this.state.nobles} />
+              </React.Fragment>
+            )}
+          </div>
+          <PlayerSection
+            player={player}
+            getReservedCard={this.getReservedCard}
+            nextTurn={this.nextTurn}
+          />
         </div>
-        <PlayerSection
-          player={player}
-          getReservedCard={this.getReservedCard}
-          nextTurn={this.nextTurn}
-        />
-      </div>
+      </React.Fragment>
     )
   }
 }
 
 export default GameLayout
+
+const Splendor = styled.p`
+  font-family: 'Lilita One', cursive;
+  font-size: 50px;
+  margin: 0;
+`

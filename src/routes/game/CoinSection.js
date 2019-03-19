@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+// import Newcoin from '../design/Coin'
 
 class CoinSection extends Component {
   state = {
@@ -67,6 +68,7 @@ class CoinSection extends Component {
   selectCoin = selectedCoin => {
     let totalSelected = 0
     let doubleCoin
+    console.log(selectedCoin)
 
     for (var key in this.state) {
       if (key !== 'currentPlayer' && key !== 'turnDone') {
@@ -82,6 +84,7 @@ class CoinSection extends Component {
     if (doubleCoin && totalSelected > 1) {
       alert(`You can only select 2 coins of same color or three of different colors`)
     } else if (totalSelected < 3) {
+      console.log(this.state[selectedCoin])
       let numberOfCoin = this.state[selectedCoin]
 
       if (numberOfCoin.total > 0) {
@@ -124,18 +127,44 @@ class CoinSection extends Component {
   }
 
   render() {
+    let render = []
+
     let { red, green, white, blue, brown, yellow } = this.state
+    console.log(this.state)
+    for (let key in this.state) {
+      if (key !== 'currentPlayer' && key !== 'turnDone' && key !== 'yellow')
+        render.push(
+          <AllCoin>
+            <Newcoin total={this.state[key].total} color={key} click={() => this.selectCoin(key)} />
+            {this.state[key].selected !== 0 && (
+              <Newcoin
+                total={this.state[key].selected}
+                color={key}
+                click={() => this.removeCoin(key)}
+              />
+            )}
+          </AllCoin>,
+        )
+    }
+
+    console.log(render)
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', width: '20%' }}>
-        <AllCoin>
-          <Coin style={{ backgroundColor: 'red' }} onClick={() => this.selectCoin('red')}>
+        {/* <AllCoin>
+          <Coin style={{ backgroundColor: '#FF2400' }} onClick={() => this.selectCoin('red')}>
             {red.total}
           </Coin>
           {red.selected !== 0 && (
             <Coin style={{ backgroundColor: 'red' }} onClick={() => this.removeCoin('red')}>
               {red.selected}
             </Coin>
+          )}
+        </AllCoin>
+        <AllCoin>
+          <Newcoin total={red.total} color="red" click={() => this.selectCoin('red')} />
+          {red.selected !== 0 && (
+            <Newcoin total={red.selected} color="red" click={() => this.removeCoin('red')} />
           )}
         </AllCoin>
         <AllCoin>
@@ -149,7 +178,7 @@ class CoinSection extends Component {
           )}
         </AllCoin>
         <AllCoin>
-          <Coin style={{ backgroundColor: 'blue' }} onClick={() => this.selectCoin('blue')}>
+          <Coin style={{ backgroundColor: '#0080FF' }} onClick={() => this.selectCoin('blue')}>
             {blue.total}
           </Coin>
           {blue.selected !== 0 && (
@@ -159,7 +188,7 @@ class CoinSection extends Component {
           )}
         </AllCoin>
         <AllCoin>
-          <Coin style={{ backgroundColor: 'green' }} onClick={() => this.selectCoin('green')}>
+          <Coin style={{ backgroundColor: '#50C878' }} onClick={() => this.selectCoin('green')}>
             {green.total}
           </Coin>
           {green.selected !== 0 && (
@@ -187,7 +216,8 @@ class CoinSection extends Component {
               {yellow.selected}
             </Coin>
           )}
-        </AllCoin>
+        </AllCoin> */}
+        {render}
         <button onClick={this.getCoins}>Get them!</button>
       </div>
     )
@@ -199,7 +229,7 @@ export default CoinSection
 const Coin = styled.div`
   width: 50px;
   height: 50px;
-  border: 1px solid black;
+  border: 1px solid #b22222;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -210,4 +240,71 @@ const Coin = styled.div`
 
 const AllCoin = styled.div`
   display: flex;
+`
+const Newcoin = ({ color, total, click }) => {
+  let primaryColor
+  let secondaryColor
+  let fontColor
+
+  if (color === 'red') {
+    primaryColor = '#FF2400'
+    secondaryColor = '#b22222'
+    fontColor = 'white'
+  } else if (color === 'white') {
+    primaryColor = 'white'
+    secondaryColor = 'black'
+    fontColor = 'black'
+  } else if (color === 'blue') {
+    primaryColor = '#0080FF'
+    secondaryColor = '#0E4C92'
+    fontColor = 'white'
+  } else if (color === 'green') {
+    primaryColor = '#3BB143'
+    secondaryColor = '#0B6623'
+    fontColor = 'white'
+  } else if (color === 'brown') {
+    primaryColor = 'black'
+    secondaryColor = 'white'
+    fontColor = 'white'
+  }
+
+  console.log(primaryColor)
+  console.log(secondaryColor)
+
+  return (
+    <OuterCoin
+      style={{ backgroundColor: primaryColor, borderColor: secondaryColor, color: fontColor }}
+      onClick={click}>
+      <InnerCoin
+        style={{ backgroundColor: primaryColor, borderColor: secondaryColor, color: fontColor }}
+        onClick={click}>
+        {total}
+      </InnerCoin>
+    </OuterCoin>
+  )
+}
+
+// export default Newcoin
+
+const OuterCoin = styled.div`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-left: 20px;
+`
+
+const InnerCoin = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 `

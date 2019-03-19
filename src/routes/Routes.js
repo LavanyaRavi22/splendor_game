@@ -3,6 +3,10 @@ import { Route, Router, Switch as RouteSwitch } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import Home from './home/Home'
 import GameLayout from './game/GameLayout'
+import tierOneCards from '../cards/TierOne'
+import tierTwoCards from '../cards/TierTwo'
+import tierThreeCards from '../cards/TierThree'
+import nobles from '../cards/Nobles'
 
 const history = createBrowserHistory()
 
@@ -13,6 +17,14 @@ class Routes extends Component {
     player_2: ' ',
     player_3: ' ',
     player_4: ' ',
+  }
+
+  componentDidMount() {
+    localStorage.setItem('tierOne', JSON.stringify(tierOneCards))
+    localStorage.setItem('tierTwo', JSON.stringify(tierTwoCards))
+    localStorage.setItem('tierThree', JSON.stringify(tierThreeCards))
+    localStorage.setItem('nobles', JSON.stringify(nobles))
+    localStorage.removeItem('data')
   }
 
   render() {

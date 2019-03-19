@@ -8,7 +8,7 @@ class Home extends Component {
       <div style={{ paddingTop: '10%' }}>
         <Title>
           <Splendor>SPLENDOR</Splendor>
-          <SubTitle>With Superheroes</SubTitle>
+          {/* <SubTitle>With Superheroes</SubTitle> */}
         </Title>
         <PlayerList {...this.props} />
       </div>
