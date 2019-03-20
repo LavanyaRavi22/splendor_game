@@ -162,7 +162,7 @@ class GameLayout extends Component {
           remainingTierTwoCards: tierTwo,
           tierThreeCards: tierThree.splice(0, 4),
           remainingTierThreeCards: tierThree,
-          nobles: nobleCards.splice(0, 5),
+          nobles: nobleCards.splice(0, 4),
           totalCoins: totalCoins,
           cardSet: true,
         },
@@ -476,11 +476,17 @@ class GameLayout extends Component {
   render() {
     let player = this.state[this.state.currentPlayer]
 
+    let otherPlayers = []
+    for (let i = 1; i <= this.props.numberOfPlayers; i++) {
+      if (this.state.currentPlayer === 'player_' + i) continue
+      else otherPlayers.push(this.state['player_' + i])
+    }
+
     return (
       <React.Fragment>
         <Prompt when={true} message="Are you sure you want to leave?" />
         <div>
-          <Splendor>Splendor</Splendor>
+          <Splendor>SPLENDOR</Splendor>
           <div style={{ display: 'flex' }}>
             {this.state.cardSet && (
               <React.Fragment>
@@ -508,6 +514,7 @@ class GameLayout extends Component {
           </div>
           <PlayerSection
             player={player}
+            otherPlayers={otherPlayers}
             getReservedCard={this.getReservedCard}
             nextTurn={this.nextTurn}
           />
@@ -521,6 +528,8 @@ export default GameLayout
 
 const Splendor = styled.p`
   font-family: 'Lilita One', cursive;
-  font-size: 50px;
+  font-size: 42px;
   margin: 0;
+  margin-left: 40px;
+  margin-bottom: 10px;
 `

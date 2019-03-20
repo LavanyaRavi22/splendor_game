@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { Button } from 'antd'
 // import Newcoin from '../design/Coin'
 
 class CoinSection extends Component {
@@ -129,8 +130,6 @@ class CoinSection extends Component {
   render() {
     let render = []
 
-    let { red, green, white, blue, brown, yellow } = this.state
-    console.log(this.state)
     for (let key in this.state) {
       if (key !== 'currentPlayer' && key !== 'turnDone' && key !== 'yellow')
         render.push(
@@ -147,95 +146,25 @@ class CoinSection extends Component {
         )
     }
 
-    console.log(render)
-
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', width: '20%' }}>
-        {/* <AllCoin>
-          <Coin style={{ backgroundColor: '#FF2400' }} onClick={() => this.selectCoin('red')}>
-            {red.total}
-          </Coin>
-          {red.selected !== 0 && (
-            <Coin style={{ backgroundColor: 'red' }} onClick={() => this.removeCoin('red')}>
-              {red.selected}
-            </Coin>
-          )}
-        </AllCoin>
-        <AllCoin>
-          <Newcoin total={red.total} color="red" click={() => this.selectCoin('red')} />
-          {red.selected !== 0 && (
-            <Newcoin total={red.selected} color="red" click={() => this.removeCoin('red')} />
-          )}
-        </AllCoin>
-        <AllCoin>
-          <Coin style={{ backgroundColor: 'white' }} onClick={() => this.selectCoin('white')}>
-            {white.total}
-          </Coin>
-          {white.selected !== 0 && (
-            <Coin style={{ backgroundColor: 'white' }} onClick={() => this.removeCoin('white')}>
-              {white.selected}
-            </Coin>
-          )}
-        </AllCoin>
-        <AllCoin>
-          <Coin style={{ backgroundColor: '#0080FF' }} onClick={() => this.selectCoin('blue')}>
-            {blue.total}
-          </Coin>
-          {blue.selected !== 0 && (
-            <Coin style={{ backgroundColor: 'blue' }} onClick={() => this.removeCoin('blue')}>
-              {blue.selected}
-            </Coin>
-          )}
-        </AllCoin>
-        <AllCoin>
-          <Coin style={{ backgroundColor: '#50C878' }} onClick={() => this.selectCoin('green')}>
-            {green.total}
-          </Coin>
-          {green.selected !== 0 && (
-            <Coin style={{ backgroundColor: 'green' }} onClick={() => this.removeCoin('green')}>
-              {green.selected}
-            </Coin>
-          )}
-        </AllCoin>
-        <AllCoin>
-          <Coin style={{ backgroundColor: 'brown' }} onClick={() => this.selectCoin('brown')}>
-            {brown.total}
-          </Coin>
-          {brown.selected !== 0 && (
-            <Coin style={{ backgroundColor: 'brown' }} onClick={() => this.removeCoin('brown')}>
-              {brown.selected}
-            </Coin>
-          )}
-        </AllCoin>
-        <AllCoin>
-          <Coin style={{ backgroundColor: 'yellow' }} onClick={() => this.selectCoin('yellow')}>
-            {yellow.total}
-          </Coin>
-          {yellow.selected !== 0 && (
-            <Coin style={{ backgroundColor: 'yellow' }} onClick={() => this.removeCoin('yellow')}>
-              {yellow.selected}
-            </Coin>
-          )}
-        </AllCoin> */}
+      <CoinList>
         {render}
-        <button onClick={this.getCoins}>Get them!</button>
-      </div>
+        <Button onClick={this.getCoins}>Get them!</Button>
+      </CoinList>
     )
   }
 }
 
 export default CoinSection
 
-const Coin = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 1px solid #b22222;
-  border-radius: 50%;
+const CoinList = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-  margin-left: 20px;
+  flex-direction: column;
+  width: 20%;
+
+  .ant-btn {
+    margin: 5px 20px;
+  }
 `
 
 const AllCoin = styled.div`
@@ -268,18 +197,15 @@ const Newcoin = ({ color, total, click }) => {
     fontColor = 'white'
   }
 
-  console.log(primaryColor)
-  console.log(secondaryColor)
-
   return (
     <OuterCoin
       style={{ backgroundColor: primaryColor, borderColor: secondaryColor, color: fontColor }}
       onClick={click}>
-      <InnerCoin
+      {/* <InnerCoin
         style={{ backgroundColor: primaryColor, borderColor: secondaryColor, color: fontColor }}
-        onClick={click}>
-        {total}
-      </InnerCoin>
+        onClick={click}> */}
+      {total}
+      {/* </InnerCoin> */}
     </OuterCoin>
   )
 }
@@ -287,15 +213,15 @@ const Newcoin = ({ color, total, click }) => {
 // export default Newcoin
 
 const OuterCoin = styled.div`
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: 2px solid;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
-  margin-left: 20px;
+  margin-bottom: 15px;
+  margin-left: 25px;
 `
 
 const InnerCoin = styled.div`

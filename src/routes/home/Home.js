@@ -3,6 +3,10 @@ import PlayerList from './PlayerList'
 import styled from 'styled-components'
 
 class Home extends Component {
+  componentDidMount() {
+    localStorage.removeItem('data')
+  }
+
   render() {
     return (
       <div style={{ paddingTop: '10%' }}>

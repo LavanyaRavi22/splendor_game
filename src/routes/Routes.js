@@ -24,7 +24,7 @@ class Routes extends Component {
     localStorage.setItem('tierTwo', JSON.stringify(tierTwoCards))
     localStorage.setItem('tierThree', JSON.stringify(tierThreeCards))
     localStorage.setItem('nobles', JSON.stringify(nobles))
-    localStorage.removeItem('data')
+    // localStorage.removeItem('data')
   }
 
   render() {
