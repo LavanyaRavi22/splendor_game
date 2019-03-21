@@ -1,7 +1,26 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import PlayerModal from '../modals/PlayerModal'
 
 class PlayerSection extends Component {
+  state = {
+    otherPlayer: this.props.otherPlayers[0],
+    showOtherPlayer: false,
+  }
+
+  showPlayerDetails = player => {
+    this.setState({
+      otherPlayer: player,
+      showOtherPlayer: true,
+    })
+  }
+
+  handleOk = () => {
+    this.setState({
+      showOtherPlayer: false,
+    })
+  }
+
   render() {
     let player = this.props.player
     console.log(this.props.otherPlayers)
@@ -11,15 +30,38 @@ class PlayerSection extends Component {
           {this.props.otherPlayers &&
             this.props.otherPlayers.map(player => {
               return (
-                <div className="player">
+                <div className="player" onClick={() => this.showPlayerDetails(player)}>
                   <p>{player.name}</p>
                   <span>{player.points}</span>
                 </div>
               )
             })}
         </OtherPlayers>
+        {/* <Modal
+          visible={this.state.showOtherPlayer}
+          title={this.state.otherPlayer.name}
+          closable={false}
+          footer={[
+            <Button key="submit" type="primary" onClick={this.handleOk}>
+              OK
+            </Button>,
+          ]}>
+          <p>{this.state.otherPlayer.points}</p>
+        </Modal> */}
+        <PlayerModal
+          showOtherPlayer={this.state.showOtherPlayer}
+          otherPlayer={this.state.otherPlayer}
+          handleOk={this.handleOk}
+        />
         <CurrentPlayer>
-          <div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '200px',
+            }}>
             <p>{player.name}</p>
             <p>{player.points}</p>
           </div>
@@ -97,10 +139,13 @@ const Card = styled.div`
 const ReservedCard = styled.div`
   display: flex;
   flex-direction: column;
-  width: 200px;
-  border: 1px solid black;
-  margin: 10px;
-  padding: 10px;
+  justify-content: space-between;
+  width: 240px;
+  height: 165px;
+  border: 2px solid black;
+  margin: 5px;
+  padding: 5px;
+  background-color: #fcfbfb;
 `
 const ReservedCoin = styled.div`
   width: 50px;
@@ -124,7 +169,7 @@ const CoinList = styled.div`
 `
 
 const OtherPlayers = styled.div`
-  margin-top: -100px;
+  margin-top: -160px;
   font-family: 'Cormorant Garamond', serif;
   font-size: 20px;
   font-weight: bold;

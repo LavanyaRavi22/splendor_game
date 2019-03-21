@@ -11,7 +11,7 @@ const Card = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 240px;
-  height: 180px;
+  height: 165px;
   border: 2px solid black;
   margin: 5px;
   padding: 5px;
@@ -119,9 +119,7 @@ class CardSection extends Component {
     return borderColor
   }
 
-  setModalDetail = (card, index, tier) => {
-    
-  }
+  setModalDetail = (card, index, tier) => {}
 
   render() {
     return (
@@ -132,7 +130,9 @@ class CardSection extends Component {
               let coin = this.getCoinList(card)
               if (card.value || card.value === 0)
                 return (
-                  <Card style={{ borderColor: this.getColor(card.color) }} onClick={() => this.setModalDetail(card, index, 1)}>
+                  <Card
+                    style={{ borderColor: this.getColor(card.color) }}
+                    onClick={() => this.setModalDetail(card, index, 1)}>
                     <p>{card.value}</p>
                     <CoinList>
                       {coin.map(c => {
