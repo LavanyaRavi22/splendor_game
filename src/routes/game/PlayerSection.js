@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import PlayerModal from '../modals/PlayerModal'
+import CurrentPlayer from './CurrentPlayer'
 
 class PlayerSection extends Component {
   state = {
@@ -37,24 +38,13 @@ class PlayerSection extends Component {
               )
             })}
         </OtherPlayers>
-        {/* <Modal
-          visible={this.state.showOtherPlayer}
-          title={this.state.otherPlayer.name}
-          closable={false}
-          footer={[
-            <Button key="submit" type="primary" onClick={this.handleOk}>
-              OK
-            </Button>,
-          ]}>
-          <p>{this.state.otherPlayer.points}</p>
-        </Modal> */}
         <PlayerModal
           showOtherPlayer={this.state.showOtherPlayer}
           otherPlayer={this.state.otherPlayer}
           handleOk={this.handleOk}
         />
-        <CurrentPlayer>
-          <div
+        <CurrentPlayer player={player} />
+        {/* <div
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -107,7 +97,7 @@ class PlayerSection extends Component {
                 </ReservedCard>
               )
             })}
-        </CurrentPlayer>
+        </CurrentPlayer> */}
       </Players>
     )
   }
@@ -194,17 +184,17 @@ const Players = styled.div`
   justify-content: flex-start;
 `
 
-const CurrentPlayer = styled.div`
-  margin-top: -40px;
-  margin-left: 200px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+// const CurrentPlayer = styled.div`
+//   margin-top: -40px;
+//   margin-left: 200px;
+//   font-family: 'Cormorant Garamond', serif;
+//   font-size: 20px;
+//   font-weight: bold;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
 
-  p {
-    margin: 0;
-  }
-`
+//   p {
+//     margin: 0;
+//   }
+// `

@@ -76,7 +76,7 @@ class NobleSection extends React.Component {
 
   render() {
     return (
-      <div style={{ width: '20%', paddingLeft: '20px', marginTop: '-25px' }}>
+      <div style={{ width: '300px', paddingLeft: '20px', marginTop: '-25px' }}>
         {this.props.nobles &&
           this.props.nobles.map(card => {
             let cards = this.getCoinList(card.cards)

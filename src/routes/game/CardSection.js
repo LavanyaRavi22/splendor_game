@@ -123,7 +123,7 @@ class CardSection extends Component {
 
   render() {
     return (
-      <div style={{ width: '80%' }}>
+      <div style={{ width: '1000px' }}>
         <Tier>
           {this.state.tierOne &&
             this.state.tierOne.map((card, index) => {

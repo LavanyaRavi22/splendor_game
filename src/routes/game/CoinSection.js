@@ -160,7 +160,7 @@ export default CoinSection
 const CoinList = styled.div`
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 250px;
 
   .ant-btn {
     margin: 5px 20px;
@@ -169,6 +169,7 @@ const CoinList = styled.div`
 
 const AllCoin = styled.div`
   display: flex;
+  width: 250px;
 `
 const Newcoin = ({ color, total, click }) => {
   let primaryColor
