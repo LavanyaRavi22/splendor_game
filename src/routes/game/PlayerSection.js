@@ -43,7 +43,11 @@ class PlayerSection extends Component {
           otherPlayer={this.state.otherPlayer}
           handleOk={this.handleOk}
         />
-        <CurrentPlayer player={player} />
+        <CurrentPlayer
+          player={player}
+          getReservedCard={this.props.getReservedCard}
+          nextTurn={this.props.nextTurn}
+        />
         {/* <div
             style={{
               display: 'flex',

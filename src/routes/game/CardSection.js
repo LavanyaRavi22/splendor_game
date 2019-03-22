@@ -38,6 +38,18 @@ const CoinList = styled.div`
   margin-bottom: 20px;
 `
 
+const ReservedCoin = styled.div`
+  width: 30px;
+  height: 30px;
+  border: 1px solid navajowhite;
+  border-radius: 50%;
+  margin-right: 5px;
+  background-color: yellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 class CardSection extends Component {
   state = {
     tierOne: this.props.tierOneCards,
@@ -119,8 +131,6 @@ class CardSection extends Component {
     return borderColor
   }
 
-  setModalDetail = (card, index, tier) => {}
-
   render() {
     return (
       <div style={{ width: '1000px' }}>
@@ -132,20 +142,26 @@ class CardSection extends Component {
                 return (
                   <Card
                     style={{ borderColor: this.getColor(card.color) }}
-                    onClick={() => this.setModalDetail(card, index, 1)}>
-                    <p>{card.value}</p>
+                    onClick={async () => {
+                      await this.props.getCard(card, index, 1)
+                      this.props.nextTurn()
+                    }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <p>{card.value}</p>
+                      <ReservedCoin
+                        onClick={async e => {
+                          e.stopPropagation()
+                          await this.props.reserveCard(card, index, 1)
+                        }}>
+                        R
+                      </ReservedCoin>
+                    </div>
                     <CoinList>
                       {coin.map(c => {
                         return c
                       })}
                     </CoinList>
-                    {/* <button
-                      onClick={async () => {
-                        await this.props.getCard(card, index, 1)
-                        this.props.nextTurn()
-                      }}>
-                      Buy
-                    </button>
+                    {/* 
                     <button
                       onClick={async () => {
                         await this.props.reserveCard(card, index, 1)
@@ -164,8 +180,22 @@ class CardSection extends Component {
               let coin = this.getCoinList(card)
               if (card.value || card.value === 0)
                 return (
-                  <Card style={{ borderColor: this.getColor(card.color) }}>
-                    <p>{card.value}</p>
+                  <Card
+                    style={{ borderColor: this.getColor(card.color) }}
+                    onClick={async () => {
+                      await this.props.getCard(card, index, 2)
+                      this.props.nextTurn()
+                    }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <p>{card.value}</p>
+                      <ReservedCoin
+                        onClick={async e => {
+                          e.stopPropagation()
+                          await this.props.reserveCard(card, index, 2)
+                        }}>
+                        R
+                      </ReservedCoin>
+                    </div>
                     <CoinList>
                       {coin.map(c => {
                         return c
@@ -196,8 +226,22 @@ class CardSection extends Component {
               let coin = this.getCoinList(card)
               if (card.value || card.value === 0)
                 return (
-                  <Card style={{ borderColor: this.getColor(card.color) }}>
-                    <p>{card.value}</p>
+                  <Card
+                    style={{ borderColor: this.getColor(card.color) }}
+                    onClick={async () => {
+                      await this.props.getCard(card, index, 3)
+                      this.props.nextTurn()
+                    }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <p>{card.value}</p>
+                      <ReservedCoin
+                        onClick={async e => {
+                          e.stopPropagation()
+                          await this.props.reserveCard(card, index, 3)
+                        }}>
+                        R
+                      </ReservedCoin>
+                    </div>
                     <CoinList>
                       {coin.map(c => {
                         return c

@@ -114,8 +114,12 @@ class PlayerModal extends React.Component {
         </Title>
         <CoinSection>{coinSection}</CoinSection>
         <CoinSection>{cardSection}</CoinSection>
-        <hr />
-        {player.nobleCards.length > 0 && <p> Noble Cards: </p>}
+
+        {player.nobleCards.length > 0 && (
+          <div>
+            <hr /> <p> Noble Cards: </p>
+          </div>
+        )}
         <CardSection>
           {player.nobleCards &&
             player.nobleCards.map(card => {
@@ -130,8 +134,11 @@ class PlayerModal extends React.Component {
               )
             })}
         </CardSection>
-        <hr />
-        {player.reservedCards.length > 0 && <p> Reserved Cards: </p>}
+        {player.reservedCards.length > 0 && (
+          <div>
+            <hr /> <p> Reserved Cards: </p>
+          </div>
+        )}
         <CardSection>
           {player.reservedCards.length > 0 &&
             player.reservedCards.map((card, index) => {
@@ -174,6 +181,8 @@ const CoinSection = styled.div`
 
 const CardSection = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 `
 
 const Coin = styled.div`
@@ -238,7 +247,7 @@ const ReservedCoin = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 5px;
+  margin-right: 2px;
   margin-bottom: 10px;
 `
 

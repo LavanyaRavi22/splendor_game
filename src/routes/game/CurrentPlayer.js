@@ -114,7 +114,8 @@ class CurrentPlayer extends React.Component {
           <div style={{ display: 'flex' }}>{coinSection}</div>
           <div style={{ display: 'flex' }}>{cardSection}</div>
         </div>
-        {/* {player.reservedCards.length > 0 &&
+        {/* <ReservedCardModal /> */}
+        {player.reservedCards.length > 0 &&
           player.reservedCards.map((card, index) => {
             let coin = []
             for (var key in card.cost) {
@@ -139,7 +140,7 @@ class CurrentPlayer extends React.Component {
                 </button>
               </ReservedCard>
             )
-          })} */}
+          })}
       </Player>
     )
   }
@@ -171,5 +172,39 @@ const Card = styled.div`
 `
 
 const Player = styled.div`
+  position: relative;
+  bottom: 0;
   display: flex;
+  justify-content: center;
+`
+
+const ReservedCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 160px;
+  height: 110px;
+  border: 2px solid black;
+  margin: 5px;
+  padding: 5px;
+  background-color: #fcfbfb;
+`
+const ReservedCoin = styled.div`
+  width: 35px;
+  height: 35px;
+  border: 1px solid black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2px;
+  margin-bottom: 10px;
+`
+
+const CoinList = styled.div`
+  width: 150px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-flow: wrap;
 `
