@@ -15,7 +15,7 @@ const Card = styled.div`
   border: 2px solid black;
   margin: 5px;
   padding: 5px;
-  background-color: #fcfbfb;
+  border-radius: 10px;
 `
 
 const Coin = styled.div`
@@ -36,18 +36,27 @@ const CoinList = styled.div`
   align-items: center;
   flex-flow: wrap;
   margin-bottom: 20px;
+  background-color: #fcfbfb;
+  height: 110px;
+  margin-bottom: 0;
+  padding-top: 35px;
+  border-radius: 10px;
+  border: 1px solid #b6b6b6;
 `
 
 const ReservedCoin = styled.div`
   width: 30px;
   height: 30px;
-  border: 1px solid navajowhite;
   border-radius: 50%;
   margin-right: 5px;
-  background-color: yellow;
+  background-color: #eeeb53;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: bold;
+  border: 1px solid #a78400;
+  color: #a78400;
 `
 
 class CardSection extends Component {
@@ -117,18 +126,24 @@ class CardSection extends Component {
 
   getColor = color => {
     let borderColor
+    let backgroundColor
     if (color === 'red') {
       borderColor = '#FF2400'
+      backgroundColor = '#FF9984'
     } else if (color === 'white') {
-      borderColor = 'white'
+      borderColor = 'black'
+      backgroundColor = 'white'
     } else if (color === 'blue') {
       borderColor = '#0080FF'
+      backgroundColor = '#83CFFF'
     } else if (color === 'green') {
       borderColor = '#3BB143'
+      backgroundColor = '#BEFFBC'
     } else if (color === 'brown') {
       borderColor = 'black'
+      backgroundColor = '#868686'
     }
-    return borderColor
+    return { borderColor, backgroundColor }
   }
 
   render() {
@@ -138,10 +153,11 @@ class CardSection extends Component {
           {this.state.tierOne &&
             this.state.tierOne.map((card, index) => {
               let coin = this.getCoinList(card)
-              if (card.value || card.value === 0)
+              if (card.value || card.value === 0) {
+                let { borderColor, backgroundColor } = this.getColor(card.color)
                 return (
                   <Card
-                    style={{ borderColor: this.getColor(card.color) }}
+                    style={{ borderColor: borderColor, backgroundColor: backgroundColor }}
                     onClick={async () => {
                       await this.props.getCard(card, index, 1)
                       this.props.nextTurn()
@@ -171,17 +187,18 @@ class CardSection extends Component {
                     </button> */}
                   </Card>
                 )
-              else return <Card />
+              } else return <Card />
             })}
         </Tier>
         <Tier>
           {this.state.tierTwo &&
             this.state.tierTwo.map((card, index) => {
               let coin = this.getCoinList(card)
-              if (card.value || card.value === 0)
+              if (card.value || card.value === 0) {
+                let { borderColor, backgroundColor } = this.getColor(card.color)
                 return (
                   <Card
-                    style={{ borderColor: this.getColor(card.color) }}
+                    style={{ borderColor: borderColor, backgroundColor: backgroundColor }}
                     onClick={async () => {
                       await this.props.getCard(card, index, 2)
                       this.props.nextTurn()
@@ -217,17 +234,18 @@ class CardSection extends Component {
                     </button> */}
                   </Card>
                 )
-              else return <Card />
+              } else return <Card />
             })}
         </Tier>
         <Tier>
           {this.state.tierThree &&
             this.state.tierThree.map((card, index) => {
               let coin = this.getCoinList(card)
-              if (card.value || card.value === 0)
+              if (card.value || card.value === 0) {
+                let { borderColor, backgroundColor } = this.getColor(card.color)
                 return (
                   <Card
-                    style={{ borderColor: this.getColor(card.color) }}
+                    style={{ borderColor: borderColor, backgroundColor: backgroundColor }}
                     onClick={async () => {
                       await this.props.getCard(card, index, 3)
                       this.props.nextTurn()
@@ -263,7 +281,7 @@ class CardSection extends Component {
                     </button> */}
                   </Card>
                 )
-              else return <Card />
+              } else return <Card />
             })}
         </Tier>
       </div>

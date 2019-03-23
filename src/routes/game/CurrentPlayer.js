@@ -1,7 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
+import ReservedCardModal from './ReservedCardModal'
 
 class CurrentPlayer extends React.Component {
+  state = {
+    showCards: false,
+  }
+
   getColor = (color, numberOfCoins, type) => {
     let primaryColor
     let secondaryColor
@@ -83,6 +88,14 @@ class CurrentPlayer extends React.Component {
     return borderColor
   }
 
+  setShowCards = () => {
+    this.setState({
+      showCards: true,
+    })
+  }
+
+  handleOk = () => {}
+
   render() {
     let player = this.props.player
     console.log(player)
@@ -114,33 +127,12 @@ class CurrentPlayer extends React.Component {
           <div style={{ display: 'flex' }}>{coinSection}</div>
           <div style={{ display: 'flex' }}>{cardSection}</div>
         </div>
-        {/* <ReservedCardModal /> */}
-        {player.reservedCards.length > 0 &&
-          player.reservedCards.map((card, index) => {
-            let coin = []
-            for (var key in card.cost) {
-              coin.push(
-                <ReservedCoin style={{ backgroundColor: key }}>{card.cost[key]}</ReservedCoin>,
-              )
-            }
-            return (
-              <ReservedCard style={{ backgroundColor: card.color }}>
-                <p>{card.value}</p>
-                <CoinList>
-                  {coin.map(c => {
-                    return c
-                  })}
-                </CoinList>
-                <button
-                  onClick={async () => {
-                    await this.props.getReservedCard(card, index)
-                    this.props.nextTurn()
-                  }}>
-                  Buy
-                </button>
-              </ReservedCard>
-            )
-          })}
+        <p onClick={this.setShowCards}>Cards</p>
+        <ReservedCardModal
+          showCards={this.state.showCards}
+          handleOk={this.handleOk}
+          player={player}
+        />
       </Player>
     )
   }
