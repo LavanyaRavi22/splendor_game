@@ -9,6 +9,7 @@ import NobleSection from './NobleSection'
 //import nobles from '../../cards/Nobles'
 import styled from 'styled-components'
 import { Prompt } from 'react-router'
+import { notification, Button } from 'antd'
 
 function shuffle(cards) {
   let shuffledCards = rearrange(cards, [])
@@ -261,6 +262,12 @@ class GameLayout extends Component {
           )
         },
       )
+    } else {
+      const args = {
+        message: 'Not enough coins',
+        description: 'You do not have enough coins to buy this card',
+      }
+      notification.open(args)
     }
   }
 
@@ -329,6 +336,12 @@ class GameLayout extends Component {
           )
         },
       )
+    } else {
+      const args = {
+        message: 'Not enough coins',
+        description: 'You do not have enough coins to buy this card',
+      }
+      notification.open(args)
     }
   }
 

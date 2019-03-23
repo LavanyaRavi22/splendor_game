@@ -94,7 +94,11 @@ class CurrentPlayer extends React.Component {
     })
   }
 
-  handleOk = () => {}
+  handleOk = () => {
+    this.setState({
+      showCards: false,
+    })
+  }
 
   render() {
     let player = this.props.player
@@ -119,19 +123,28 @@ class CurrentPlayer extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
             width: '200px',
+            fontSize: '30px',
           }}>
-          <p>{player.name}</p>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 'bolder' }}>
+            {player.name}
+          </p>
           <p>{player.points}</p>
         </div>
         <div>
           <div style={{ display: 'flex' }}>{coinSection}</div>
           <div style={{ display: 'flex' }}>{cardSection}</div>
         </div>
-        <p onClick={this.setShowCards}>Cards</p>
+        {player.reservedCards.length > 0 && player.nobleCards.length > 0 && (
+          <CardLabel style={{ marginLeft: '30px' }} onClick={this.setShowCards}>
+            Cards
+          </CardLabel>
+        )}
         <ReservedCardModal
           showCards={this.state.showCards}
           handleOk={this.handleOk}
           player={player}
+          getReservedCard={this.props.getReservedCard}
+          nextTurn={this.props.nextTurn}
         />
       </Player>
     )
@@ -164,39 +177,23 @@ const Card = styled.div`
 `
 
 const Player = styled.div`
-  position: relative;
-  bottom: 0;
+  margin-top: -70px;
   display: flex;
   justify-content: center;
+  width: 100%;
+
+  p {
+    margin: 0;
+  }
 `
 
-const ReservedCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 160px;
-  height: 110px;
-  border: 2px solid black;
-  margin: 5px;
-  padding: 5px;
-  background-color: #fcfbfb;
-`
-const ReservedCoin = styled.div`
-  width: 35px;
-  height: 35px;
-  border: 1px solid black;
-  border-radius: 50%;
+const CardLabel = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 2px;
-  margin-bottom: 10px;
-`
-
-const CoinList = styled.div`
-  width: 150px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-flow: wrap;
+  margin-left: 30px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
 `
