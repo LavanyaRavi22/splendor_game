@@ -78,7 +78,7 @@ class ReservedCardModal extends React.Component {
         fontColor = 'white'
       } else if (key === 'brown') {
         primaryColor = 'black'
-        secondaryColor = 'white'
+        secondaryColor = 'black'
         fontColor = 'white'
       }
       coin.push(
@@ -124,7 +124,7 @@ class ReservedCardModal extends React.Component {
         visible={this.props.showCards}
         title={null}
         closable={false}
-        bodyStyle={{ height: '400px', overflow: 'scroll' }}
+        bodyStyle={{ maxHeight: '400px', overflow: 'scroll' }}
         footer={[
           <Button key="submit" type="primary" onClick={this.props.handleOk}>
             OK
@@ -201,7 +201,10 @@ class ReservedCardModal extends React.Component {
               let cards = this.getNobleCoinList(card.cards)
               return (
                 <NobleCard>
-                  <p>{card.value}</p>
+                  <p
+                    style={{ fontSize: '20px', color: 'black', textShadow: '2px 2px 5px #979797' }}>
+                    {card.value}
+                  </p>
                   <NobleCardList>{cards}</NobleCardList>
                 </NobleCard>
               )
@@ -216,7 +219,7 @@ export default ReservedCardModal
 
 const CardSection = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-wrap: wrap;
 `
 

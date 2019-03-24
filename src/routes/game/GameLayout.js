@@ -512,7 +512,7 @@ class GameLayout extends Component {
     return (
       <React.Fragment>
         <Prompt when={true} message="Are you sure you want to leave?" />
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <Splendor>SPLENDOR</Splendor>
           <div style={{ display: 'flex' }}>
             {this.state.cardSet && (
@@ -556,7 +556,5 @@ export default GameLayout
 const Splendor = styled.p`
   font-family: 'Lilita One', cursive;
   font-size: 42px;
-  margin: 0;
-  margin-left: 40px;
-  margin-bottom: 10px;
+  margin: 0 auto;
 `

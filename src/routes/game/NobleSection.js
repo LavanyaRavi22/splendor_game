@@ -11,6 +11,7 @@ const Card = styled.div`
   margin: 10px;
   padding: 10px;
   background-color: #f7ecec;
+  border-radius: 5px;
 `
 const CardList = styled.div`
   width: 135px;
@@ -82,7 +83,9 @@ class NobleSection extends React.Component {
             let cards = this.getCoinList(card.cards)
             return (
               <Card>
-                <p>{card.value}</p>
+                <p style={{ fontSize: '25px', color: 'black', textShadow: '2px 2px 5px #979797' }}>
+                  {card.value}
+                </p>
                 <CardList>
                   {cards.map(c => {
                     return c

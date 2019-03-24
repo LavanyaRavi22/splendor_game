@@ -26,7 +26,7 @@ class PlayerModal extends React.Component {
       fontColor = 'white'
     } else if (color === 'brown') {
       primaryColor = 'black'
-      secondaryColor = 'white'
+      secondaryColor = 'black'
       fontColor = 'white'
     }
 
@@ -70,18 +70,24 @@ class PlayerModal extends React.Component {
 
   getBorderColor = color => {
     let borderColor
+    let backgroundColor
     if (color === 'red') {
       borderColor = '#FF2400'
+      backgroundColor = '#FF9984'
     } else if (color === 'white') {
-      borderColor = 'white'
+      borderColor = 'black'
+      backgroundColor = 'white'
     } else if (color === 'blue') {
       borderColor = '#0080FF'
+      backgroundColor = '#83CFFF'
     } else if (color === 'green') {
       borderColor = '#3BB143'
+      backgroundColor = '#BEFFBC'
     } else if (color === 'brown') {
       borderColor = 'black'
+      backgroundColor = '#868686'
     }
-    return borderColor
+    return { borderColor, backgroundColor }
   }
 
   render() {
@@ -102,7 +108,7 @@ class PlayerModal extends React.Component {
         visible={this.props.showOtherPlayer}
         title={null}
         closable={false}
-        bodyStyle={{ height: '400px', overflow: 'scroll' }}
+        bodyStyle={{ maxHeight: '400px', overflow: 'scroll' }}
         footer={[
           <Button key="submit" type="primary" onClick={this.props.handleOk}>
             OK
@@ -117,7 +123,16 @@ class PlayerModal extends React.Component {
 
         {player.nobleCards.length > 0 && (
           <div>
-            <hr /> <p> Noble Cards: </p>
+            <hr />
+            <p
+              style={{
+                margin: '0',
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: '20px',
+                fontWeight: 'bold',
+              }}>
+              Noble Cards:
+            </p>
           </div>
         )}
         <CardSection>
@@ -128,7 +143,10 @@ class PlayerModal extends React.Component {
                 cards.push(this.getColor(key, card.cards[key], 'nobleCard'))
               return (
                 <NobleCard>
-                  <p>{card.value}</p>
+                  <p
+                    style={{ fontSize: '20px', color: 'black', textShadow: '2px 2px 5px #979797' }}>
+                    {card.value}
+                  </p>
                   <CardList>{cards}</CardList>
                 </NobleCard>
               )
@@ -136,19 +154,39 @@ class PlayerModal extends React.Component {
         </CardSection>
         {player.reservedCards.length > 0 && (
           <div>
-            <hr /> <p> Reserved Cards: </p>
+            <hr />
+            <p
+              style={{
+                margin: '0',
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: '20px',
+                fontWeight: 'bold',
+              }}>
+              Reserved Cards:
+            </p>
           </div>
         )}
         <CardSection>
           {player.reservedCards.length > 0 &&
             player.reservedCards.map((card, index) => {
               let coin = []
+              let { borderColor, backgroundColor } = this.getBorderColor(card.color)
               for (var key in card.cost) {
                 coin.push(this.getColor(key, card.cost[key], 'reservedCoin'))
               }
               return (
-                <ReservedCard style={{ borderColor: this.getBorderColor(card.color) }}>
-                  <p>{card.value}</p>
+                <ReservedCard
+                  style={{ borderColor: borderColor, backgroundColor: backgroundColor }}>
+                  <p
+                    style={{
+                      fontSize: '20px',
+                      margin: '0',
+                      marginLeft: '10px',
+                      color: 'white',
+                      textShadow: '1px 1px 3px black',
+                    }}>
+                    {card.value}
+                  </p>
                   <CoinList>
                     {coin.map(c => {
                       return c
@@ -228,6 +266,7 @@ const CardList = styled.div`
   flex-flow: wrap;
   margin-right: 10px;
 `
+
 const ReservedCard = styled.div`
   display: flex;
   flex-direction: column;
@@ -236,9 +275,9 @@ const ReservedCard = styled.div`
   height: 110px;
   border: 2px solid black;
   margin: 5px;
-  padding: 5px;
-  background-color: #fcfbfb;
+  border-radius: 10px;
 `
+
 const ReservedCoin = styled.div`
   width: 35px;
   height: 35px;
@@ -247,14 +286,20 @@ const ReservedCoin = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 2px;
-  margin-bottom: 10px;
+  margin-right: 5px;
 `
 
 const CoinList = styled.div`
-  width: 150px;
+  width: 155px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   flex-flow: wrap;
+  margin-bottom: 20px;
+  background-color: #fcfbfb;
+  height: 70px;
+  margin-bottom: 0;
+  border-radius: 0px 0px 10px 10px;
+  border-top: 1px solid #b6b6b6;
+  opacity: 0.8;
 `

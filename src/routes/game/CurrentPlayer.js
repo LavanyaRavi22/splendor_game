@@ -30,7 +30,7 @@ class CurrentPlayer extends React.Component {
       fontColor = 'white'
     } else if (color === 'brown') {
       primaryColor = 'black'
-      secondaryColor = 'white'
+      secondaryColor = 'black'
       fontColor = 'white'
     }
 
@@ -134,7 +134,7 @@ class CurrentPlayer extends React.Component {
           <div style={{ display: 'flex' }}>{coinSection}</div>
           <div style={{ display: 'flex' }}>{cardSection}</div>
         </div>
-        {player.reservedCards.length > 0 && player.nobleCards.length > 0 && (
+        {(player.reservedCards.length > 0 || player.nobleCards.length > 0) && (
           <CardLabel style={{ marginLeft: '30px' }} onClick={this.setShowCards}>
             Cards
           </CardLabel>
@@ -181,6 +181,7 @@ const Player = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-left: -200px;
 
   p {
     margin: 0;

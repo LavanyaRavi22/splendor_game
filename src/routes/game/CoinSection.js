@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { Button } from 'antd'
+import { Button, Modal } from 'antd'
 // import Newcoin from '../design/Coin'
 
 class CoinSection extends Component {
@@ -31,6 +31,7 @@ class CoinSection extends Component {
     },
     currentPlayer: this.props.currentPlayer,
     turnDone: this.props.turnDone,
+    showCoinModal: false,
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -62,6 +63,7 @@ class CoinSection extends Component {
         },
         currentPlayer: props.currentPlayer,
         turnDone: props.turnDone,
+        showCoinModal: false,
       }
     } else return null
   }
@@ -72,7 +74,7 @@ class CoinSection extends Component {
     console.log(selectedCoin)
 
     for (var key in this.state) {
-      if (key !== 'currentPlayer' && key !== 'turnDone') {
+      if (key !== 'currentPlayer' && key !== 'turnDone' && key !== 'showCoinModal') {
         totalSelected += this.state[key].selected
         if (
           (this.state[key].selected === 1 && selectedCoin === key) ||
@@ -125,13 +127,34 @@ class CoinSection extends Component {
 
     await this.props.getCoins(purchasedCoins)
     this.props.nextTurn()
+
+    this.setState({
+      showCoinModal: false,
+    })
+  }
+
+  cancel = () => {
+    this.setState({
+      showCoinModal: false,
+    })
+  }
+
+  setShowModal = () => {
+    this.setState({
+      showCoinModal: true,
+    })
   }
 
   render() {
     let render = []
 
     for (let key in this.state) {
-      if (key !== 'currentPlayer' && key !== 'turnDone' && key !== 'yellow')
+      if (
+        key !== 'currentPlayer' &&
+        key !== 'turnDone' &&
+        key !== 'yellow' &&
+        key !== 'showCoinModal'
+      )
         render.push(
           <AllCoin>
             <Newcoin total={this.state[key].total} color={key} click={() => this.selectCoin(key)} />
@@ -147,10 +170,26 @@ class CoinSection extends Component {
     }
 
     return (
-      <CoinList>
-        {render}
-        <Button onClick={this.getCoins}>Get them!</Button>
-      </CoinList>
+      <React.Fragment>
+        <CoinList>
+          {render}
+          <Button onClick={this.setShowModal}>Get them!</Button>
+        </CoinList>
+        <Modal
+          visible={this.state.showCoinModal}
+          title={null}
+          closable={false}
+          footer={[
+            <Button key="submit" onClick={this.cancel}>
+              No
+            </Button>,
+            <Button key="submit" type="primary" onClick={this.getCoins}>
+              Yes
+            </Button>,
+          ]}>
+          <p>Do you want to get the coins?</p>
+        </Modal>
+      </React.Fragment>
     )
   }
 }
@@ -194,7 +233,7 @@ const Newcoin = ({ color, total, click }) => {
     fontColor = 'white'
   } else if (color === 'brown') {
     primaryColor = 'black'
-    secondaryColor = 'white'
+    secondaryColor = 'black'
     fontColor = 'white'
   }
 

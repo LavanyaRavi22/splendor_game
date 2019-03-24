@@ -162,7 +162,7 @@ class CardSection extends Component {
         fontColor = 'white'
       } else if (key === 'brown') {
         primaryColor = 'black'
-        secondaryColor = 'white'
+        secondaryColor = 'black'
         fontColor = 'white'
       }
       coin.push(
