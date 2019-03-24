@@ -116,7 +116,7 @@ class PlayerModal extends React.Component {
         ]}>
         <Title>
           <p>{player.name}</p>
-          <p>{player.points}</p>
+          <span>{player.points}</span>
         </Title>
         <CoinSection>{coinSection}</CoinSection>
         <CoinSection>{cardSection}</CoinSection>
@@ -208,8 +208,11 @@ const Title = styled.div`
   justify-content: space-between;
   padding: 0px 50px;
   font-size: 30px;
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: bold;
+
+  p {
+    font-weight: bold;
+    font-family: 'Cormorant Garamond', serif;
+  }
 `
 
 const CoinSection = styled.div`
@@ -286,7 +289,7 @@ const ReservedCoin = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 5px;
+  margin-right: 3px;
 `
 
 const CoinList = styled.div`

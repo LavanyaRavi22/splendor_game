@@ -408,7 +408,11 @@ class GameLayout extends Component {
         },
       )
     } else {
-      alert('Reserve option not available')
+      const args = {
+        message: 'Cannot reserve',
+        description: 'Buy previously reserved cards before reserving another one.',
+      }
+      notification.open(args)
     }
   }
 
@@ -417,39 +421,58 @@ class GameLayout extends Component {
 
     let currentPlayerDetails = this.state[currentPlayer]
     let currentPlayerCoins = this.state[currentPlayer].coins
+    let totalCoins = 0
 
-    for (let key in purchasedCoins) {
-      if (purchasedCoins[key] !== 0) {
-        await this.setState({
-          totalCoins: {
-            ...this.state.totalCoins,
-            [key]: this.state.totalCoins[key] - purchasedCoins[key],
-          },
-        })
-
-        currentPlayerCoins[key] += purchasedCoins[key]
-      }
+    for (let key in currentPlayerCoins) {
+      totalCoins += currentPlayerCoins[key]
     }
 
-    let nextPlayer =
-      (Number(currentPlayer.slice(currentPlayer.length - 1, currentPlayer.length)) + 1) %
-      this.props.numberOfPlayers
+    for (let key in purchasedCoins) {
+      totalCoins += purchasedCoins[key]
+    }
 
-    if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
+    console.log(totalCoins)
 
-    await this.setState(
-      {
-        currentPlayer: 'player_' + String(nextPlayer),
-        [currentPlayer]: {
-          ...currentPlayerDetails,
-          coins: {
-            ...currentPlayerCoins,
+    if (totalCoins > 10) {
+      const args = {
+        message: 'Too many coins',
+        description: 'You can only hold 10 coins at any point in the game',
+      }
+      notification.open(args)
+    } else {
+      for (let key in purchasedCoins) {
+        if (purchasedCoins[key] !== 0) {
+          await this.setState({
+            totalCoins: {
+              ...this.state.totalCoins,
+              [key]: this.state.totalCoins[key] - purchasedCoins[key],
+            },
+          })
+
+          currentPlayerCoins[key] += purchasedCoins[key]
+        }
+      }
+
+      let nextPlayer =
+        (Number(currentPlayer.slice(currentPlayer.length - 1, currentPlayer.length)) + 1) %
+        this.props.numberOfPlayers
+
+      if (nextPlayer === 0) nextPlayer = this.props.numberOfPlayers
+
+      await this.setState(
+        {
+          currentPlayer: 'player_' + String(nextPlayer),
+          [currentPlayer]: {
+            ...currentPlayerDetails,
+            coins: {
+              ...currentPlayerCoins,
+            },
           },
+          turnDone: true,
         },
-        turnDone: true,
-      },
-      () => localStorage.setItem('data', JSON.stringify(this.state)),
-    )
+        () => localStorage.setItem('data', JSON.stringify(this.state)),
+      )
+    }
   }
 
   nextTurn = () => {

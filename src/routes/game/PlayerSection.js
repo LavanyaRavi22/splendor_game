@@ -164,9 +164,8 @@ const CoinList = styled.div`
 
 const OtherPlayers = styled.div`
   margin-top: -160px;
-  font-family: 'Cormorant Garamond', serif;
+
   font-size: 20px;
-  font-weight: bold;
 
   .player {
     display: flex;
@@ -179,6 +178,8 @@ const OtherPlayers = styled.div`
 
   p {
     margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: bold;
   }
 `
 
