@@ -177,7 +177,6 @@ const Card = styled.div`
 `
 
 const Player = styled.div`
-  margin-top: -70px;
   display: flex;
   justify-content: center;
   width: 100%;

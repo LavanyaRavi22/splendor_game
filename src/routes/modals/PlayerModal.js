@@ -53,7 +53,6 @@ class PlayerModal extends React.Component {
             color: fontColor,
             width: '20px',
             height: '20px',
-            marginRight: '5px',
             marginLeft: '5px',
           }}>
           {numberOfCoins}

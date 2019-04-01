@@ -3,6 +3,7 @@ import CoinSection from './CoinSection'
 import PlayerSection from './PlayerSection'
 import CardSection from './CardSection'
 import NobleSection from './NobleSection'
+import PlayerWon from '../modals/PlayerWon'
 // import tierOneCards from '../../cards/TierOne'
 // import tierTwoCards from '../../cards/TierTwo'
 // import tierThreeCards from '../../cards/TierThree'
@@ -131,6 +132,7 @@ class GameLayout extends Component {
     cardSet: false,
     turnDone: false,
     reserveCoins: 5,
+    playerWon: false,
   }
 
   componentDidMount() {
@@ -252,14 +254,15 @@ class GameLayout extends Component {
         },
         () => {
           this.checkNobleCard()
-          this.checkPoints()
-          this.setState(
-            {
-              turnDone: true,
-              currentPlayer: 'player_' + String(nextPlayer),
-            },
-            () => localStorage.setItem('data', JSON.stringify(this.state)),
-          )
+          let nextTurn = this.checkPoints()
+          if (nextTurn)
+            this.setState(
+              {
+                turnDone: true,
+                currentPlayer: 'player_' + String(nextPlayer),
+              },
+              () => localStorage.setItem('data', JSON.stringify(this.state)),
+            )
         },
       )
     } else {
@@ -326,14 +329,15 @@ class GameLayout extends Component {
         },
         () => {
           this.checkNobleCard()
-          this.checkPoints()
-          this.setState(
-            {
-              turnDone: true,
-              currentPlayer: 'player_' + String(nextPlayer),
-            },
-            () => localStorage.setItem('data', JSON.stringify(this.state)),
-          )
+          let nextTurn = this.checkPoints()
+          if (nextTurn)
+            this.setState(
+              {
+                turnDone: true,
+                currentPlayer: 'player_' + String(nextPlayer),
+              },
+              () => localStorage.setItem('data', JSON.stringify(this.state)),
+            )
         },
       )
     } else {
@@ -487,11 +491,11 @@ class GameLayout extends Component {
   checkNobleCard = () => {
     let nobles = Object.assign([], this.state.nobles)
     //let currentPlayer = Object.assign({}, this.state.currentPlayer)
-    let player = Object.assign({}, this.state[this.state.currentPlayer])
 
     nobles.map(async (nobleCard, index) => {
       let totalCount = 0
       let countMatched = 0
+      let player = Object.assign({}, this.state[this.state.currentPlayer])
 
       let cardRequired = nobleCard.cards
       for (var key in cardRequired) {
@@ -502,25 +506,32 @@ class GameLayout extends Component {
       if (totalCount === countMatched) {
         player.nobleCards.push(nobleCard)
         if (nobleCard.value) player.points += nobleCard.value
-        nobles.splice(1, index)
+        nobles.splice(index, 1)
       }
 
-      await this.setState({
-        [this.state.currentPlayer]: player,
-        nobles: nobles,
-      })
+      await this.setState(
+        {
+          [this.state.currentPlayer]: player,
+          nobles: nobles,
+        },
+        () => localStorage.setItem('data', JSON.stringify(this.state)),
+      )
     })
 
-    localStorage.setItem('data', JSON.stringify(this.state))
+    //localStorage.setItem('data', JSON.stringify(this.state))
   }
 
   checkPoints = () => {
     let player = Object.assign({}, this.state[this.state.currentPlayer])
 
     if (player.points >= 15) {
-      alert(`${player.name} won!`)
-      this.props.routeProps.history.push('/')
+      this.setState({
+        playerWon: true,
+      })
+      return false
     }
+
+    return true
   }
 
   render() {
@@ -567,6 +578,12 @@ class GameLayout extends Component {
             otherPlayers={otherPlayers}
             getReservedCard={this.getReservedCard}
             nextTurn={this.nextTurn}
+          />
+          <PlayerWon
+            player={player}
+            otherPlayers={otherPlayers}
+            routeProps={this.props.routeProps}
+            playerWon={this.state.playerWon}
           />
         </div>
       </React.Fragment>

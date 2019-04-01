@@ -6,6 +6,7 @@ class ReservedCardModal extends React.Component {
   buyReservedCard = async (card, index) => {
     await this.props.getReservedCard(card, index)
     this.props.nextTurn()
+    this.props.handleOk()
   }
 
   cancel = () => {}
@@ -287,5 +288,4 @@ const NobleCoin = styled.div`
   justify-content: center;
   align-items: center;
   margin-left: 5px;
-  margin-right: 5px;
 `

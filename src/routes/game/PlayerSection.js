@@ -163,7 +163,7 @@ const CoinList = styled.div`
 `
 
 const OtherPlayers = styled.div`
-  margin-top: -160px;
+  margin-top: -90px;
 
   font-size: 20px;
 
@@ -187,6 +187,7 @@ const Players = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  margin-top: 10px;
 `
 
 // const CurrentPlayer = styled.div`
